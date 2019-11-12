@@ -19,9 +19,11 @@ namespace BCity {
 
         bool _showalbum = false;
         bool _showSign = false;
+        bool _showPhoto = false;
 
         AlbumAgent _albumAgent;
         SignAgent _signAgent;
+        PhotoAgent _photoAgent;
 
 
         /// <summary>
@@ -64,24 +66,48 @@ namespace BCity {
         ///     打开相册
         /// </summary>
         public void OpenAlbum(bool fromMenu) {
+            if (_showPhoto) {
+                _showPhoto = false;
+                _photoAgent = null;
+            }
+
+            if (_showSign)
+            {
+                _showSign = false;
+                _signAgent = null;
+            }
+
+
             _menuContainer.gameObject.SetActive(false);
             if (!_showalbum)
             {
                 if (_albumAgent == null)
                 {
                     _albumAgent = Instantiate(_albumAgentPrefab, _albumAgentContainer);
-
+                    _albumAgent.Init(this);
                     Debug.Log("_albumAgent init");
 
                 }
-                _albumAgent.Init(this);
                 _albumAgent.Open(true);
                 _showalbum = true; ;
             }
         }
 
+        public void OpenPhoto() {
+            if (!_showPhoto) {
+                if (_photoAgent == null)
+                {
+                    _photoAgent = Instantiate(_photoAgentPrefab, _photoAgentContainer);
+                    _photoAgent.Init(this);
+                }
 
+                _photoAgent.Open();
+                _showPhoto = true;
+            }
 
+        
+        
+        }
 
     }
 

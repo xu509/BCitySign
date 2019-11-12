@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 
 namespace BCity
 { 
@@ -9,16 +11,31 @@ namespace BCity
     /// </summary>
     public class PhotoAgent : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
+        MenuAgent _menuAgent;
+
+        public void Init(MenuAgent menuAgent) {
+            _menuAgent = menuAgent;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+        public void Open() {
+            GetComponent<Image>().DOFade(1, 2f);
         }
+
+        public void Close() {
+            Destroy(gameObject);
+        }
+
+
+        public void DoFinish() {
+            Close();
+            _menuAgent.OpenAlbum(false);
+        }
+
+        public void DoRephoto()
+        {
+            Debug.Log("重拍");
+
+        }
+
     }
 }

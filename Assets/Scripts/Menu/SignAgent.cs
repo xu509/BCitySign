@@ -35,9 +35,9 @@ namespace BCity {
         /// <summary>
         ///     点击拍照
         /// </summary>
-        public void DoPhoto() { 
-        
-        
+        public void DoPhoto() {
+            gameObject.SetActive(false);
+            _menuAgent.OpenPhoto();
         }
 
         public void DoFinish() {
