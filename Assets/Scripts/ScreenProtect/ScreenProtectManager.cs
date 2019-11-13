@@ -34,6 +34,7 @@ namespace BCity
         private int _column;
 
         private ScreenProtectStatus _screenProtectStatus;
+        private BCManager _manager;
         
 
         public void Init() {
@@ -42,6 +43,8 @@ namespace BCity
             _column = 0;
 
             _goLeftDisplayBehavior.Init(this);
+            _manager = GameObject.Find("MainBrain").GetComponent<BCManager>();
+
         }
 
         public void Run() {
@@ -68,6 +71,30 @@ namespace BCity
         private void CreateAgents (){
             // 创建并且加满
             float x = 0, y = 0;
+
+            var logoContainerWidth = _logoContainer.GetComponent<RectTransform>().rect.width;
+            var logoContainerHeight = _logoContainer.GetComponent<RectTransform>().rect.height;
+
+            while (y < logoContainerHeight) {
+                if (x < logoContainerWidth)
+                {
+                    // 生成 agent
+                    var gen_x = _column;
+
+
+                    // 更新x    
+                    // 更新row
+                }
+                else { 
+                    // 更新y
+                    // 更新column
+
+                    // 归零x
+                }
+            }
+
+            
+
 
             LogoAgent agent = GameObject.Instantiate(_logoAgentPrefab, _logoContainer);
             agent.GetComponent<RectTransform>().anchoredPosition = new Vector2(960,540);
