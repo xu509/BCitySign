@@ -14,9 +14,14 @@ namespace BCity
         [SerializeField] DaoDataSource _daoDataSource;
 
 
+        private string _fileDir;
+        public string fileDir { get { return _fileDir; } }
+
+
         public void Init() {
             _daoDataSource.Init();
 
+            _fileDir = Application.dataPath + "/BCityAsset/";
             //GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
 
         }
@@ -32,6 +37,22 @@ namespace BCity
             else {
                 return null;
             }
+        }
+
+        /// <summary>
+        ///     持久化 texture 文件
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <returns></returns>
+        public ReqResult SaveTexture(Texture texture) {
+            float width = 600f;
+            float height = 600f;
+
+
+
+
+
+            return null;
         }
 
     }

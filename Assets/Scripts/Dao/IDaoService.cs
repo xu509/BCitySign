@@ -13,6 +13,7 @@ namespace BCity
         List<PageRecord> GetList(int start, int size);
 
         long GetListTotal();
+               
 
     }
 

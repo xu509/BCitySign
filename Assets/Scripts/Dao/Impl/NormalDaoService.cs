@@ -7,10 +7,12 @@ namespace BCity {
     public class NormalDaoService : MonoBehaviour, IDaoService
     {
         DaoDataSource _dataSource;
+        BCManager _manager;
 
         void Start()
         {
             _dataSource = GameObject.Find("Dao").GetComponent<DaoDataSource>();
+            _manager = GameObject.Find("MainBrain").GetComponent<BCManager>();
         }
 
 
