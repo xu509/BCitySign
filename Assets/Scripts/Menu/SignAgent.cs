@@ -59,7 +59,7 @@ namespace BCity {
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
 
-            _brushSize = 300.0f;
+            _brushSize = 150.0f;
             _brushLerpSize = (_defaultBrushTex.width + _defaultBrushTex.height) / 2.0f / _brushSize;
             _lastPoint = Vector2.zero;
 
