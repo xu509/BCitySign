@@ -17,6 +17,10 @@ namespace BCity
             _resultMessage = resultMessage;
         }
 
+        public object GetData() {
+            return _data;
+        }
+
     }
 
 }

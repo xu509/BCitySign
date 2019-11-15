@@ -56,8 +56,19 @@ namespace BCity
             FileStream stream = new FileStream(path, FileMode.Create);
             serializer.Serialize(stream, _likeDataBase);
             stream.Close();
-
         }
+
+        /// <summary>
+        /// 更新xml数据
+        /// </summary>
+        public void UpdateXMLData() {
+            XmlSerializer serializer = new XmlSerializer(typeof(PageRecordDataBase));
+            string path = Application.dataPath + "/BCityAsset/data.xml";
+            FileStream stream = new FileStream(path, FileMode.Create);
+            serializer.Serialize(stream, _likeDataBase);
+            stream.Close();
+        }
+
 
 
         private void LoadDataFromXml() {

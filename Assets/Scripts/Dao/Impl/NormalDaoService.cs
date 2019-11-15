@@ -20,7 +20,10 @@ namespace BCity {
         {
             var datas = _dataSource.GetData();
             datas.pageRecords.Add(pageRecord);
-            _dataSource.CreateXMLData();           
+
+            Debug.Log("Add Page Records : " + datas.pageRecords.Count);
+
+            _dataSource.UpdateXMLData();           
         }
 
         public List<PageRecord> GetList(int start, int size)

@@ -51,11 +51,17 @@ namespace BCity {
             // 保存
             DateTime dateTime = DateTime.Now;
 
-            //_manager.daoManager.SaveTexture(dateTime,)
-
+            PageRecord pageRecord = new PageRecord();
+            pageRecord.Cdate = dateTime;
+            
             // 保存签名
             var texture = _writePadAgent.GetTexture();
-            _manager.daoManager.SaveTexture(dateTime, texture, SaveTextureType.Sign);
+            var result = _manager.daoManager.SaveTexture(dateTime, texture, SaveTextureType.Sign);
+            string signAddress = (string) result.GetData();
+            pageRecord.SignAddress = signAddress;
+
+            _manager.daoManager.GetDaoService().Add(pageRecord);
+
 
             gameObject.SetActive(false);
             _menuAgent.OpenAlbum(false);
