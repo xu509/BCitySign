@@ -34,6 +34,17 @@ namespace BCity
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
             _scrollAreaAgent.Init(OnRecognizeDirection);
+
+            initData(); 
+        }
+
+        private void initData() {
+            IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
+            List<PageRecord> list = _daoManagerServ.GetList(0, (int)_daoManagerServ.GetListTotal());
+            PageRecord record = list[0];
+            Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
+            Debug.Log("record PhotoAddress " + record.PhotoAddress);
+            Debug.Log("record SignAddress " + record.SignAddress);
         }
 
 

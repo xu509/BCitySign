@@ -53,6 +53,11 @@ public class BookPro : MonoBehaviour
             }
         }
     }
+
+    public Paper[] updatePapersWithDaoList(List<PageRecord> list) {
+        
+    }
+
     [HideInInspector]
     public int StartFlippingPaper = 0;
     [HideInInspector]
