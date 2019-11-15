@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace BCity
@@ -12,6 +14,7 @@ namespace BCity
         [SerializeField] DaoSourceEnum _daoSourceEnum;
         [SerializeField] NormalDaoService _normalDaoService;
         [SerializeField] DaoDataSource _daoDataSource;
+        [SerializeField] TextureService _textureService;
 
 
         private string _fileDir;
@@ -44,15 +47,40 @@ namespace BCity
         /// </summary>
         /// <param name="texture"></param>
         /// <returns></returns>
-        public ReqResult SaveTexture(Texture texture) {
-            float width = 600f;
-            float height = 600f;
+        public ReqResult SaveTexture(DateTime dt, Texture texture, SaveTextureType saveTextureType) {
+            int width = 600;
+            int height = 600;
+
+            string dataTime = dt.ToString("yyyy-MM-dd-HH-mm-ss");
+                     
+            string fileName = null;
 
 
+            // 创建文件夹
+            string fileDic = dataTime + "/";
+            string fullFileDic = _fileDir + fileDic;
 
+            if (!File.Exists(fullFileDic))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(fullFileDic);
+                Debug.Log("创建文件夹： " + fullFileDic);
+            }
 
+            Texture2D newPng;
+            newPng = _textureService.ScaleTexture(texture, width, height);
 
-            return null;
+            if (saveTextureType == SaveTextureType.Sign)
+            {
+                fileName = "sign";
+            }
+            else if (saveTextureType == SaveTextureType.Photo) {
+
+                fileName = "photo";
+            }
+
+            string newFileName = _textureService.SaveBytesToFile(newPng.EncodeToPNG(), fullFileDic, fileName);
+
+            return new ReqResult(ResultMessage.OK, fileDic + newFileName);
         }
 
     }

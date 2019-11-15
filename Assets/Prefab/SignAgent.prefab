@@ -405,7 +405,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raw: {fileID: 1062281683694104649}
-  enableResevalLetter: 0
   mat: {fileID: 2100000, guid: d5bd80a3c0a141c4397995985bedbf1a, type: 2}
   brushTypeTexture: {fileID: 2800000, guid: de4ff7b4d0756b044a8a2fc540b2bc7e, type: 3}
   brushColor: {r: 0, g: 0, b: 0, a: 1}
@@ -641,13 +640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328631abc265e2c4780a243a102d0038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _paintBrushShader: {fileID: 4800000, guid: 05dec21384f7d42f2aa958f3ddfe3e77, type: 3}
-  _clearBrushShader: {fileID: 4800000, guid: 17c5e77c14cfd4cdead69cded6083455, type: 3}
-  _defaultBrushRawImage: {fileID: 0}
-  _defaultBrushTex: {fileID: 2800000, guid: 2214e70fd339542749a2491382f48208, type: 3}
-  _defaultColorImage: {fileID: 0}
-  _paintCanvas: {fileID: 1062281683694104649}
-  _defaultColor: {r: 0, g: 0, b: 0, a: 1}
+  _writePadAgent: {fileID: 120138325778940348}
 --- !u!222 &4319523146330199628
 CanvasRenderer:
   m_ObjectHideFlags: 0

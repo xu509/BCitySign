@@ -417,5 +417,15 @@ namespace BCity
             print("WaitAndPrint " + Time.time);
         }
 
+        /// <summary>
+        ///     获取 texture
+        /// </summary>
+        /// <returns></returns>
+        public Texture GetTexture() {
+            //texRender.
+            Texture texture = texRender;
+            return texture;
+        }
+
     }
 }
