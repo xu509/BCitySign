@@ -65,5 +65,7 @@ Files/
 UpgradeLog.htm
 
 out/
+Assets/BCityAsset/
+!Assets/BCityAsset/data.xml
 
 Assets/Script/Kinect/bean.meta

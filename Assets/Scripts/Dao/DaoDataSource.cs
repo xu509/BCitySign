@@ -29,35 +29,46 @@ namespace BCity
                 if (isCreate)
                 {
                     _likeDataBase = new PageRecordDataBase();
+                    CreateXMLData();
                 }
                 else {
 
-                    CreateXMLData();
                 }
-
                 LoadDataFromXml();
-
             }
             catch (Exception e)
             {
                 Debug.LogError(e.StackTrace);
                 Debug.LogError(e.Message);
-
-                throw new Exception("服务器连接失败：" + e.Message.ToString());
+                //throw new Exception("服务器连接失败：" + e.Message.ToString());
             }
         }
 
 
         public void CreateXMLData()
         {
+            Debug.Log("创建XML");
+
             XmlSerializer serializer = new XmlSerializer(typeof(PageRecordDataBase));
             string path = Application.dataPath + "/BCityAsset/data.xml";
+            _likeDataBase = new PageRecordDataBase();
 
             FileStream stream = new FileStream(path, FileMode.Create);
             serializer.Serialize(stream, _likeDataBase);
             stream.Close();
-
         }
+
+        /// <summary>
+        /// 更新xml数据
+        /// </summary>
+        public void UpdateXMLData() {
+            XmlSerializer serializer = new XmlSerializer(typeof(PageRecordDataBase));
+            string path = Application.dataPath + "/BCityAsset/data.xml";
+            FileStream stream = new FileStream(path, FileMode.Create);
+            serializer.Serialize(stream, _likeDataBase);
+            stream.Close();
+        }
+
 
 
         private void LoadDataFromXml() {

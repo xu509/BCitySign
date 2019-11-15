@@ -58,3 +58,13 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+Assets/Files/
+
+Files/
+
+UpgradeLog.htm
+
+out/
+Assets/BCityAsset/
+
+Assets/Script/Kinect/bean.meta
