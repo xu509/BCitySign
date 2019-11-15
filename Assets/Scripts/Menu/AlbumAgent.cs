@@ -9,10 +9,19 @@ namespace BCity
     /// <summary>
     ///     相册代理
     /// </summary>
+
+    public enum ScrollDirectionEnum
+    {
+        Left, Right, Top, Bottom
+    }
+
     public class AlbumAgent : MonoBehaviour
     {
         private MenuAgent _menuAgent;
 
+        [SerializeField] ScrollAreaAgent _scrollAreaAgent;
+
+        [SerializeField] AutoFlip _flipAgent;
 
         /// <summary>
         ///     打开
@@ -24,9 +33,19 @@ namespace BCity
 
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
+            _scrollAreaAgent.Init(OnRecognizeDirection);
         }
 
 
+        void OnRecognizeDirection(ScrollDirectionEnum scrollDirectionEnum) {
+            if (scrollDirectionEnum == ScrollDirectionEnum.Left){
+                _flipAgent.FlipRightPage();
+            }
+            else if(scrollDirectionEnum == ScrollDirectionEnum.Right){
+                _flipAgent.FlipLeftPage();
+
+            }
+        }
 
         /// <summary>
         ///     关闭
