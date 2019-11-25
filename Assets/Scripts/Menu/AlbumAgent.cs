@@ -20,6 +20,7 @@ namespace BCity
         private MenuAgent _menuAgent;
 
         [SerializeField] ScrollAreaAgent _scrollAreaAgent;
+        [SerializeField] BookPro _bookPro;
 
         [SerializeField] AutoFlip _flipAgent;
 
@@ -45,6 +46,8 @@ namespace BCity
             Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
             Debug.Log("record PhotoAddress " + record.PhotoAddress);
             Debug.Log("record SignAddress " + record.SignAddress);
+
+            _bookPro.InitData(list);
         }
 
 

@@ -3,6 +3,9 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using BCity;
+using System.Collections.Generic;
+
 public enum FlipMode1
 {
     RightToLeft,
@@ -54,9 +57,9 @@ public class BookPro : MonoBehaviour
         }
     }
 
-    public Paper[] updatePapersWithDaoList(List<PageRecord> list) {
+    //public Paper[] updatePapersWithDaoList(List<PageRecord> list) {
         
-    }
+    //}
 
     [HideInInspector]
     public int StartFlippingPaper = 0;
@@ -131,6 +134,25 @@ public class BookPro : MonoBehaviour
         LeftPageShadow.rectTransform.sizeDelta = new Vector2(pageWidth, shadowPageHeight);
         LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
     }
+
+    public void InitData(List<PageRecord> datas) {
+        //
+        Debug.Log("此处初始化数据");
+        Debug.Log("数据数量： " + datas.Count);
+        //papers = new Paper[6];
+        Paper paper = new Paper();
+        //papers[0] = paper;
+        //papers[1] = paper;
+        //papers[2] = paper;
+        //papers[3] = paper;
+
+        //papers.SetValue(paper);
+
+
+
+    }
+
+
 
     /// <summary>
     /// transform point from global (world-space) to local space
