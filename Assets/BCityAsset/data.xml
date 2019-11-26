@@ -13,19 +13,9 @@
       <Cdate>2019-11-15T16:36:53.726349+08:00</Cdate>
       <SignAddress>2019-11-15-16-36-53/sign.png</SignAddress>
     </PageRecord>
+    <PageRecord>
+      <Cdate>2019-11-15T16:27:54.5500545+08:00</Cdate>
+      <SignAddress>2019-11-15-16-27-54/sign.png</SignAddress>
+    </PageRecord>
   </records>
-  <pageRecords>
-    <PageRecord>
-      <Cdate>2019-11-15T16:27:54.5500545+08:00</Cdate>
-      <SignAddress>2019-11-15-16-27-54/sign.png</SignAddress>
-    </PageRecord>
-    <PageRecord>
-      <Cdate>2019-11-15T16:27:54.5500545+08:00</Cdate>
-      <SignAddress>2019-11-15-16-27-54/sign.png</SignAddress>
-    </PageRecord>
-    <PageRecord>
-      <Cdate>2019-11-15T16:36:53.726349+08:00</Cdate>
-      <SignAddress>2019-11-15-16-36-53/sign.png</SignAddress>
-    </PageRecord>
-  </pageRecords>
 </PageRecordDataBase>
