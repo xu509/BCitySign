@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using BCity;
 using System.Collections.Generic;
+using System.IO;
 
 public enum FlipMode1
 {
@@ -27,10 +28,15 @@ public class BookPro : MonoBehaviour
     public bool enableShadowEffect = true;
     [Tooltip("Uncheck this if the book does not contain transparent pages to improve the overall performance")]
     public bool hasTransparentPages = true;
-    [HideInInspector]
+    //[HideInInspector]
     public int currentPaper = 0;
     //[HideInInspector]
     public Paper[] papers;
+
+    [SerializeField] GameObject paperFstPrefab;
+    [SerializeField] GameObject paperFontPrefab;
+    [SerializeField] GameObject paperBackPrefab;
+    [SerializeField] GameObject paperEndPrefab;
     /// <summary>
     /// OnFlip invocation list, called when any page flipped
     /// </summary>
@@ -61,9 +67,9 @@ public class BookPro : MonoBehaviour
         
     //}
 
-    [HideInInspector]
+    //[HideInInspector]
     public int StartFlippingPaper = 0;
-    [HideInInspector]
+    //[HideInInspector]
     public int EndFlippingPaper = 1;
 
     public Vector3 EndBottomLeft
@@ -101,9 +107,89 @@ public class BookPro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        return;
+
+        
+    }
+
+    public void InitData(List<PageRecord> datas) {
+        //
+        Debug.Log("此处初始化数据");
+        Debug.Log("数据数量： " + datas.Count);
+
+        GameObject page0 = GameObject.Find("Page0");
+        GameObject page1 = GameObject.Find("Page1");
+        GameObject page2 = GameObject.Find("Page2");
+        GameObject page3 = GameObject.Find("Page3");
+
+        //papers = new Paper[6];
+        // Paper paper = new Paper();
+        papers = new Paper[datas.Count+1];
+
+        for (int i = 0;i<(datas.Count+1);i++) {
+            Debug.Log("new Paper" + i);
+            Paper paper = new Paper();
+            Transform fontTransform = LeftPageTransform;
+            // fontTransform.sizeDelta = new Vector2( yourWidth, yourHeight);
+            Transform backTransform = RightPageTransform;
+
+            if (i == 0) {
+                paper.Front = GameObject.Instantiate(paperFstPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperFontPrefab,transform);
 
 
+            }
+            else if(i == datas.Count) {
+                paper.Front = GameObject.Instantiate(paperBackPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperEndPrefab,transform);
+
+
+            }
+            else {
+                paper.Front = GameObject.Instantiate(paperBackPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperFontPrefab,transform);
+
+
+            }
+
+            // paperFontPrefab
+            // LogoAgent agent = GameObject.Instantiate(_logoAgentPrefab, _logoContainer);
+            papers[i] = paper; 
+        }
+
+        EndFlippingPaper = datas.Count;
+
+        page0.SetActive(false);
+        page1.SetActive(false);
+        page2.SetActive(false);
+        page3.SetActive(false);
+
+        run();
+
+    }
+
+    public static Texture2D LoadImageByte(string path){
+            FileStream files=new FileStream (Application.dataPath + "/BCityAsset/" +path,FileMode.Open,FileAccess.Read);
+            files.Seek(0,SeekOrigin.Begin);
+            byte[] imgByte=new byte[files.Length];
+
+            //少量临时加载会 红问号 
+            //files.BeginRead(imgByte,0,(int)files.Length,CallBack,files);
+
+            files.Read(imgByte,0,imgByte.Length);
+            files.Close();
+
+            Texture2D tx=new Texture2D (512,512);
+            tx.LoadImage(imgByte);
+            return tx;
+        }
+       static void CallBack(IAsyncResult ar){
+           FileStream fileStream=ar.AsyncState as FileStream;
+            fileStream.Close();
+            fileStream.Dispose();
+       } 
+
+    public void run() {
+        Debug.Log("Start papers.Length is "+papers.Length);
         Canvas[] c = GetComponentsInParent<Canvas>();
         if (c.Length > 0)
             canvas = c[c.Length - 1];
@@ -138,27 +224,6 @@ public class BookPro : MonoBehaviour
         LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
     }
 
-    public void InitData(List<PageRecord> datas) {
-        //
-        Debug.Log("此处初始化数据");
-        Debug.Log("数据数量： " + datas.Count);
-        //papers = new Paper[6];
-        Paper paper = new Paper();
-        //papers[0] = paper;
-        //papers[1] = paper;
-        //papers[2] = paper;
-        //papers[3] = paper;
-
-        Debug.Log("papers.Length : " + papers.Length);
-
-        
-
-        //papers.SetValue(paper);
-
-
-
-    }
-
 
 
     /// <summary>
@@ -168,6 +233,8 @@ public class BookPro : MonoBehaviour
     /// <returns></returns>
     public Vector3 transformPoint(Vector3 global)
     {
+
+        Debug.Log("transformPoint");
         Vector2 localPos = BookPanel.InverseTransformPoint(global);
         return localPos;
     }
@@ -178,6 +245,7 @@ public class BookPro : MonoBehaviour
     /// <returns></returns>
     public Vector3 transformPointMousePosition(Vector3 mouseScreenPos)
     {
+        Debug.Log("transformPointMousePosition");
         if(canvas.renderMode== RenderMode.ScreenSpaceCamera )
         {
             Vector3 mouseWorldPos = canvas.worldCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, canvas.planeDistance));
@@ -216,6 +284,8 @@ public class BookPro : MonoBehaviour
 
         int previousPaper = pageDragging ? currentPaper - 2 : currentPaper - 1;
 
+        Debug.Log ("previousPaper is "+previousPaper);
+
         //Hide all pages
         for (int i = 0; i < papers.Length; i++)
         {
@@ -235,6 +305,8 @@ public class BookPro : MonoBehaviour
                 papers[i].Back.transform.SetSiblingIndex(i);
                 BookUtility.CopyTransform(LeftPageTransform.transform, papers[i].Back.transform);
             }
+
+            Debug.Log("papers.Length is "+papers.Length);
 
             //Show the front page of all next papers
             for (int i = papers.Length - 1; i >= currentPaper; i--)
@@ -315,6 +387,7 @@ public class BookPro : MonoBehaviour
     //mouse interaction events call back
     public void OnMouseDragRightPage()
     {
+        Debug.Log("OnMouseDragRightPage");
         if (interactable && !tweening)
         {
           
@@ -324,6 +397,7 @@ public class BookPro : MonoBehaviour
     }
     public void DragRightPageToPoint(Vector3 point)
     {
+        Debug.Log("DragRightPageToPoint");
         if (currentPaper > EndFlippingPaper) return;
         pageDragging = true;
         mode = FlipMode.RightToLeft;
@@ -352,6 +426,7 @@ public class BookPro : MonoBehaviour
     }
     public void OnMouseDragLeftPage()
     {
+        Debug.Log("OnMouseDragLeftPage");
         if (interactable && !tweening)
         {
             DragLeftPageToPoint(transformPointMousePosition(Input.mousePosition));
@@ -361,6 +436,7 @@ public class BookPro : MonoBehaviour
     }
     public void DragLeftPageToPoint(Vector3 point)
     {
+        Debug.Log("DragLeftPageToPoint");
         if (currentPaper <= StartFlippingPaper) return;
         pageDragging = true;
         mode = FlipMode.LeftToRight;
@@ -390,11 +466,13 @@ public class BookPro : MonoBehaviour
     }
     public void OnMouseRelease()
     {
+        Debug.Log("OnMouseRelease");
         if (interactable )
             ReleasePage();
     }
     public void ReleasePage()
     {
+        Debug.Log("OnMouseRelease");
         if (pageDragging)
         {
             pageDragging = false;
@@ -433,6 +511,7 @@ public class BookPro : MonoBehaviour
     /// </summary>
     public void Flip()
     {
+        Debug.Log("Flip");
         pageDragging = false;
 
         if (mode == FlipMode.LeftToRight)
@@ -539,6 +618,7 @@ public class BookPro : MonoBehaviour
     }
     public void UpdateBookRTLToPoint(Vector3 followLocation)
     {
+        Debug.Log("UpdateBookRTLToPoint");
         mode = FlipMode.RightToLeft;
         f = followLocation;
         if (enableShadowEffect)
@@ -582,6 +662,7 @@ public class BookPro : MonoBehaviour
     }
     public void UpdateBookLTRToPoint(Vector3 followLocation)
     {
+        Debug.Log("UpdateBookLTRToPoint");
         mode = FlipMode.LeftToRight;
         f = followLocation;
         if (enableShadowEffect)
