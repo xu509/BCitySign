@@ -9,6 +9,8 @@ namespace BCity {
     public class OverviewPanelAgent : MonoBehaviour
     {
         MenuAgent _menuAgent;
+        public Image introImgF1;
+        public Image introImgF2;
 
         // Start is called before the first frame update
         void Start()
@@ -40,6 +42,23 @@ namespace BCity {
             GetComponent<Image>().DOFade(0, 0.5f).OnComplete(() => {
                 Destroy(gameObject);
                 onCloseCompleted.Invoke();
+            });
+        }
+
+        public void choseF1(){
+            introImgF1.
+            introImgF2.transform.SetAsFirstSibling();
+            introImgF2.DOFade(0, 0.5f).OnComplete(() => {
+                
+            });
+        }
+
+        public void choseF2(){
+
+            introImgF1.gameObject.SetActive(false);
+            introImgF1.transform.SetAsFirstSibling();
+            introImgF1.DOFade(0, 0.5f).OnComplete(() => {
+                
             });
         }
 

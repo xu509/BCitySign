@@ -149,7 +149,7 @@ public class BookPro : MonoBehaviour
                 paper.Front = GameObject.Instantiate(paperBackPrefab, transform);
                 paper.Back = GameObject.Instantiate(paperEndPrefab, transform);
 
-                BookLeftPage leftBook = paper.Front.GetComponent<BookLeftPage>();
+                /*BookLeftPage leftBook = paper.Front.GetComponent<BookLeftPage>();
                 BookRightPage rightBook = paper.Back.GetComponent<BookRightPage>();
                 //RawImage signImg = rightBook.signImg;
                 PageRecord record = datas[0];
@@ -815,3 +815,4 @@ public static class BookUtility
 
     }
 }
+ 
