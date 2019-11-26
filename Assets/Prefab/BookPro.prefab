@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 222000014219598928}
   - component: {fileID: 114000012896526542}
   - component: {fileID: 114000012848874552}
+  - component: {fileID: 4572518345922561023}
   m_Layer: 5
   m_Name: BookPro
   m_TagString: Untagged
@@ -546,6 +547,24 @@ MonoBehaviour:
       m_Calls: []
   StartFlippingPaper: 0
   EndFlippingPaper: 1
+--- !u!114 &4572518345922561023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010894660052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35bbf9999c1f06348866e3deff9bdbab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ControledBook: {fileID: 0}
+  Mode: 0
+  PageFlipTime: 1
+  DelayBeforeStart: 0
+  TimeBetweenPages: 5
+  AutoStartFlip: 1
 --- !u!1 &1000011901245788
 GameObject:
   m_ObjectHideFlags: 0
