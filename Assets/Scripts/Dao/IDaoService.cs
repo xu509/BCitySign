@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace BCity
         List<PageRecord> GetList(int start, int size);
 
         long GetListTotal();
-               
+
+        void SavePhotoInfomation(DateTime dateTime,string photoUrl);
 
     }
 

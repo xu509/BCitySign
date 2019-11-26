@@ -62,25 +62,6 @@ namespace BCity {
     //通过GUI绘制摄像头要显示的窗口
     private void OnGUI()
     {
-        //绘制画面(Screen.width / 2 - 150f, Screen.height / 2 - 290,这里是画面距离场景的高和宽的限制)
-            //800, 600是和camTexture的画面一样大的绘制窗口
-        //首先根据摄像头展示的画面来判断摄像头是否存在/
-
-
-        /*if(isClick == true&&camTexture != null)
-        {
-            GUI.DrawTexture(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 600, 400), camTexture);
-            GUI.depth = -1000;
-            isCaptured = false;
-
-        }*/
-        /*else {
-        }
-        if(isClick == false && camTexture != null)//不显示画面(没写这个步骤之前有个坑)
-        {
-            
-            GUI.DrawTexture(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 0, 0), camTexture);
-        }*/
     }
 
     public void Save(WebCamTexture t)

@@ -151,9 +151,9 @@ public class BookPro : MonoBehaviour
 
                 BookLeftPage leftBook = paper.Front.GetComponent<BookLeftPage>();
                 BookRightPage rightBook = paper.Back.GetComponent<BookRightPage>();
-                RawImage signImg = rightBook.signImg;
+                //RawImage signImg = rightBook.signImg;
                 PageRecord record = datas[0];
-                signImg.texture = LoadImageByte(record.SignAddress); 
+                //signImg.texture = LoadImageByte(record.SignAddress); 
 
             }
             else
@@ -163,9 +163,9 @@ public class BookPro : MonoBehaviour
 
                 BookLeftPage leftBook = paper.Back.GetComponent<BookLeftPage>();
                 BookRightPage rightBook = paper.Back.GetComponent<BookRightPage>();
-                RawImage signImg = rightBook.signImg;
+                //RawImage signImg = rightBook.signImg;
                 PageRecord record = datas[0];
-                signImg.texture = LoadImageByte(record.SignAddress); 
+                //signImg.texture = LoadImageByte(record.SignAddress); 
             }
 
             // paperFontPrefab

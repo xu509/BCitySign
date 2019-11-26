@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 namespace BCity
 { 
@@ -13,13 +14,34 @@ namespace BCity
     {
         MenuAgent _menuAgent;
 
-        public void Init(MenuAgent menuAgent) {
+        [SerializeField] WebCamManager _webCamManager;
+
+        DateTime _dateTime;
+        BCManager _bcManager;
+
+        Texture2D _photo; //拍摄的图片
+        bool _isCountDowning;
+        bool _hasPhotoed;
+
+        public void Init(MenuAgent menuAgent,DateTime dateTime) {
             _menuAgent = menuAgent;
+            _dateTime = dateTime;
+            _isCountDowning = false;
+
+            _bcManager = GameObject.Find("MainBrain").GetComponent<BCManager>();
+
+            Debug.Log("拍摄模块启动");
+
+
         }
 
         public void Open() {
-            GetComponent<Image>().DOFade(1, 2f);
+            GetComponent<Image>().DOFade(1, 2f)
+                .OnComplete(()=> {
+                    _webCamManager.Init(OnWebCameraPhoto, OnCountDownFinished, OnCountDownStart,OnInitError);
+                });
         }
+
 
         public void Close() {
             Destroy(gameObject);
@@ -27,15 +49,43 @@ namespace BCity
 
 
         public void DoFinish() {
+            // 保存图片
+            var result = _bcManager.daoManager.SavePhotoTexture(_dateTime, _photo);
+            //更新数据
+
+            string photoUrl = (string)result.GetData();
+            _bcManager.daoManager.GetDaoService().SavePhotoInfomation(_dateTime, photoUrl);
+
             Close();
             _menuAgent.OpenAlbum(false);
         }
 
         public void DoRephoto()
         {
-            Debug.Log("重拍");
+            _webCamManager.DoRePhoto();
 
         }
+
+
+        public void OnWebCameraPhoto(Texture2D texture) {
+            _photo = texture;
+            _hasPhotoed = true;
+        }
+
+        public void OnCountDownFinished()
+        {
+            _isCountDowning = false;
+        }
+
+        public void OnCountDownStart()
+        {                        
+            _isCountDowning = true;
+        }
+
+        public void OnInitError() { 
+        
+        }
+
 
     }
 }
