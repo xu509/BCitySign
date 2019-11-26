@@ -153,7 +153,7 @@ public class BookPro : MonoBehaviour
                 BookRightPage rightBook = paper.Back.GetComponent<BookRightPage>();
                 //RawImage signImg = rightBook.signImg;
                 PageRecord record = datas[0];
-                //signImg.texture = LoadImageByte(record.SignAddress); 
+                //signImg.texture = LoadImageByte(record.SignAddress); */
 
             }
             else

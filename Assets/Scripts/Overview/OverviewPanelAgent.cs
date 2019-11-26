@@ -46,7 +46,7 @@ namespace BCity {
         }
 
         public void choseF1(){
-            introImgF1.
+            //introImgF1.
             introImgF2.transform.SetAsFirstSibling();
             introImgF2.DOFade(0, 0.5f).OnComplete(() => {
                 
