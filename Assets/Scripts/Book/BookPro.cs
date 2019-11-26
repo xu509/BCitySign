@@ -111,7 +111,7 @@ public class BookPro : MonoBehaviour
         
     }
 
-    public void InitData(List<PageRecord> datas) {
+    private void InitData(List<PageRecord> datas) {
         //
         Debug.Log("此处初始化数据");
         Debug.Log("数据数量： " + datas.Count);
@@ -163,7 +163,6 @@ public class BookPro : MonoBehaviour
         page2.SetActive(false);
         page3.SetActive(false);
 
-        run();
 
     }
 
@@ -188,7 +187,9 @@ public class BookPro : MonoBehaviour
             fileStream.Dispose();
        } 
 
-    public void run() {
+    public void Init(List<PageRecord> datas) {
+        InitData(datas);
+
         Debug.Log("Start papers.Length is "+papers.Length);
         Canvas[] c = GetComponentsInParent<Canvas>();
         if (c.Length > 0)
@@ -200,11 +201,9 @@ public class BookPro : MonoBehaviour
 
         CalcCurlCriticalPoints();
 
-
         float pageWidth = BookPanel.rect.width / 2.0f;
         float pageHeight = BookPanel.rect.height;
         
-
         ClippingPlane.rectTransform.sizeDelta = new Vector2(pageWidth * 2 + pageHeight, pageHeight + pageHeight * 2);
 
         //hypotenous (diagonal) page length

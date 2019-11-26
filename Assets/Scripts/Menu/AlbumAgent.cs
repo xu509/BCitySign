@@ -9,20 +9,14 @@ namespace BCity
     /// <summary>
     ///     相册代理
     /// </summary>
-
-    public enum ScrollDirectionEnum
-    {
-        Left, Right, Top, Bottom
-    }
-
     public class AlbumAgent : MonoBehaviour
     {
+        // - 父组件
         private MenuAgent _menuAgent;
 
-        [SerializeField] ScrollAreaAgent _scrollAreaAgent;
-        [SerializeField] BookPro _bookPro;
+        // - 子组件
+        [SerializeField, Header("Book")] BookAgent _bookAgent;
 
-        [SerializeField] AutoFlip _flipAgent;
 
         /// <summary>
         ///     打开
@@ -34,32 +28,12 @@ namespace BCity
 
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
-            _scrollAreaAgent.Init(OnRecognizeDirection);
 
-            initData(); 
-        }
+            _bookAgent.Init();
 
-        private void initData() {
-            IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
-            List<PageRecord> list = _daoManagerServ.GetList(0, (int)_daoManagerServ.GetListTotal());
-            PageRecord record = list[0];
-            Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
-            Debug.Log("record PhotoAddress " + record.PhotoAddress);
-            Debug.Log("record SignAddress " + record.SignAddress);
-
-            _bookPro.InitData(list);
         }
 
 
-        void OnRecognizeDirection(ScrollDirectionEnum scrollDirectionEnum) {
-            if (scrollDirectionEnum == ScrollDirectionEnum.Left){
-                _flipAgent.FlipRightPage();
-            }
-            else if(scrollDirectionEnum == ScrollDirectionEnum.Right){
-                _flipAgent.FlipLeftPage();
-
-            }
-        }
 
         /// <summary>
         ///     关闭
@@ -73,11 +47,13 @@ namespace BCity
 
         public void DoLeft() {
             Debug.Log("上一页");
+            _bookAgent.DoPreviousPage();
         }
 
         public void DoRight()
         {
             Debug.Log("下一页");
+            _bookAgent.DoNextPage();
         }
 
         public void DoReturn()
