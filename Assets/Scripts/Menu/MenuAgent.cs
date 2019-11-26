@@ -109,6 +109,7 @@ namespace BCity {
                 
                 });
                 _showOverview = true;
+                _menuContainer.gameObject.SetActive(false);
             }
         }
 
