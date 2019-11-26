@@ -66,22 +66,56 @@ namespace BCity
                 Debug.Log("创建文件夹： " + fullFileDic);
             }
 
-            Texture2D newPng;
-            newPng = _textureService.ScaleTexture(texture, width, height);
+            Texture2D newPng = null;
 
             if (saveTextureType == SaveTextureType.Sign)
             {
                 fileName = "sign";
+                newPng = _textureService.ScaleTexture(texture, width, height);
+
             }
             else if (saveTextureType == SaveTextureType.Photo) {
 
                 fileName = "photo";
+                //newPng = _textureService.ScaleTexture(texture, texture.width, texture.height);
+
+                
+
+                //newPng = _textureService.ScaleTexture(texture, texture.width, texture.height);
+
+            }
+            if (newPng != null) {
+                string newFileName = _textureService.SaveBytesToFile(newPng.EncodeToPNG(), fullFileDic, fileName);
+                return new ReqResult(ResultMessage.OK, fileDic + newFileName);
+            }
+            return null;
+        }
+
+        public ReqResult SavePhotoTexture(DateTime dt, Texture2D texture)
+        {
+            string dataTime = dt.ToString("yyyy-MM-dd-HH-mm-ss");
+
+            string fileName = null;
+
+            // 创建文件夹
+            string fileDic = dataTime + "/";
+            string fullFileDic = _fileDir + fileDic;
+
+            if (!File.Exists(fullFileDic))
+            {
+                DirectoryInfo di = Directory.CreateDirectory(fullFileDic);
+                Debug.Log("创建文件夹： " + fullFileDic);
             }
 
-            string newFileName = _textureService.SaveBytesToFile(newPng.EncodeToPNG(), fullFileDic, fileName);
 
+            fileName = "photo";
+            string newFileName = _textureService.SaveBytesToFile(texture.EncodeToPNG(), fullFileDic, fileName);
             return new ReqResult(ResultMessage.OK, fileDic + newFileName);
         }
+
+
+
+
 
     }
 

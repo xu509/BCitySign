@@ -17,6 +17,8 @@ namespace BCity {
         private BCManager _manager;
         private MenuAgent _menuAgent;
 
+        private DateTime _signDateTime;
+
 
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
@@ -43,29 +45,49 @@ namespace BCity {
         /// </summary>
         public void DoPhoto() {
             gameObject.SetActive(false);
-            _menuAgent.OpenPhoto();
+
+            // 此时保存签名
+            SaveSign();
+
+            _menuAgent.OpenPhoto(_signDateTime);
         }
 
         public void DoFinish() {
 
             // 保存
-            DateTime dateTime = DateTime.Now;
-
-            PageRecord pageRecord = new PageRecord();
-            pageRecord.Cdate = dateTime;
-            
-            // 保存签名
-            var texture = _writePadAgent.GetTexture();
-            var result = _manager.daoManager.SaveTexture(dateTime, texture, SaveTextureType.Sign);
-            string signAddress = (string) result.GetData();
-            pageRecord.SignAddress = signAddress;
-
-            _manager.daoManager.GetDaoService().Add(pageRecord);
+            SaveSign();
 
 
             gameObject.SetActive(false);
             _menuAgent.OpenAlbum(false);
         }
+
+
+
+
+
+        /// <summary>
+        ///     保存签名
+        /// </summary>
+        private void SaveSign() {
+            DateTime dateTime = DateTime.Now;
+            _signDateTime = dateTime;
+
+            PageRecord pageRecord = new PageRecord();
+            pageRecord.Cdate = dateTime;
+
+            // 保存签名
+            var texture = _writePadAgent.GetTexture();
+            var result = _manager.daoManager.SaveTexture(dateTime, texture, SaveTextureType.Sign);
+            string signAddress = (string)result.GetData();
+            pageRecord.SignAddress = signAddress;
+
+            _manager.daoManager.GetDaoService().Add(pageRecord);
+        }
+
+
+
+
 
     }
 }

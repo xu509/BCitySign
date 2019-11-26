@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 namespace BCity {
 
@@ -74,18 +75,22 @@ namespace BCity {
             }
         }
 
-        public void OpenPhoto() {
+        /// <summary>
+        ///     打开拍摄界面
+        /// </summary>
+        public void OpenPhoto(DateTime dateTime) {
             if (!_showPhoto) {
                 if (_photoAgent == null)
                 {
                     _photoAgent = Instantiate(_photoAgentPrefab, _photoAgentContainer);
-                    _photoAgent.Init(this);
+                    _photoAgent.Init(this,dateTime);
                 }
 
                 _photoAgent.Open();
                 _showPhoto = true;
             }
         }
+
 
 
         /// <summary>
