@@ -29,7 +29,7 @@ public class BookPro : MonoBehaviour
     public bool hasTransparentPages = true;
     [HideInInspector]
     public int currentPaper = 0;
-    [HideInInspector]
+    //[HideInInspector]
     public Paper[] papers;
     /// <summary>
     /// OnFlip invocation list, called when any page flipped
@@ -101,6 +101,9 @@ public class BookPro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        return;
+
+
         Canvas[] c = GetComponentsInParent<Canvas>();
         if (c.Length > 0)
             canvas = c[c.Length - 1];
@@ -145,6 +148,10 @@ public class BookPro : MonoBehaviour
         //papers[1] = paper;
         //papers[2] = paper;
         //papers[3] = paper;
+
+        Debug.Log("papers.Length : " + papers.Length);
+
+        
 
         //papers.SetValue(paper);
 
@@ -205,6 +212,8 @@ public class BookPro : MonoBehaviour
     /// </summary>
     public void UpdatePages()
     {
+        Debug.Log(" Update Pages ! ");
+
         int previousPaper = pageDragging ? currentPaper - 2 : currentPaper - 1;
 
         //Hide all pages
