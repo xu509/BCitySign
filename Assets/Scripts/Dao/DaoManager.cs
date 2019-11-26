@@ -78,9 +78,7 @@ namespace BCity
 
                 fileName = "photo";
                 //newPng = _textureService.ScaleTexture(texture, texture.width, texture.height);
-
                 
-
                 //newPng = _textureService.ScaleTexture(texture, texture.width, texture.height);
 
             }

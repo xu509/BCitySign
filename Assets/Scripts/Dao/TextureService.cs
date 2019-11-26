@@ -21,13 +21,13 @@ namespace BCity
             //Texture2D result = null;
 
             //// 涂白底部
-            for (int x = 0; x < result.width; x++)
-            {
-                for (int y = 0; y < result.height; y++)
-                {
-                    result.SetPixel(x, y, Color.white);
-                }
-            }
+            //for (int x = 0; x < result.width; x++)
+            //{
+            //    for (int y = 0; y < result.height; y++)
+            //    {
+            //        result.SetPixel(x, y, Color.white);
+            //    }
+            //}
 
             result.name = "ScaleTextureResult";
             RenderTexture.active = rt;
@@ -38,20 +38,20 @@ namespace BCity
             result.ReadPixels(new Rect(0, 0, width, height), desx, desy);
 
             // 去除所有的透明像素
-            for (int x = 0; x < result.width; x++)
-            {
-                for (int y = 0; y < result.height; y++)
-                {
+            //for (int x = 0; x < result.width; x++)
+            //{
+            //    for (int y = 0; y < result.height; y++)
+            //    {
 
-                    Color currentColor = result.GetPixel(x, y);
+            //        Color currentColor = result.GetPixel(x, y);
 
-                    if (currentColor != Color.white && currentColor != Color.black)
-                    {
-                        result.SetPixel(x, y, Color.white);
-                    }
+            //        if (currentColor != Color.white && currentColor != Color.black)
+            //        {
+            //            result.SetPixel(x, y, Color.white);
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
             result.Apply();
             RenderTexture.active = null;
