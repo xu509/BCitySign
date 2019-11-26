@@ -4,6 +4,10 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using BCity;
+using System.Collections.Generic;
+using System.IO;
+
 public enum FlipMode1
 {
     RightToLeft,
@@ -12,7 +16,38 @@ public enum FlipMode1
 
 namespace BCity
 {
-    public class BookPro : MonoBehaviour
+    Canvas canvas;
+    [SerializeField]
+    RectTransform BookPanel;
+    public Image ClippingPlane;
+    public Image Shadow;
+    public Image LeftPageShadow;
+    public Image RightPageShadow;
+    public Image ShadowLTR;
+    public RectTransform LeftPageTransform;
+    public RectTransform RightPageTransform;
+    public bool interactable = true;
+    public bool enableShadowEffect = true;
+    [Tooltip("Uncheck this if the book does not contain transparent pages to improve the overall performance")]
+    public bool hasTransparentPages = true;
+    //[HideInInspector]
+    public int currentPaper = 0;
+    //[HideInInspector]
+    public Paper[] papers;
+
+    [SerializeField] GameObject paperFstPrefab;
+    [SerializeField] GameObject paperFontPrefab;
+    [SerializeField] GameObject paperBackPrefab;
+    [SerializeField] GameObject paperEndPrefab;
+    /// <summary>
+    /// OnFlip invocation list, called when any page flipped
+    /// </summary>
+    public UnityEvent OnFlip;
+
+    /// <summary>
+    /// The Current Shown paper (the paper its front shown in right part)
+    /// </summary>
+    public int CurrentPaper
     {
         Canvas canvas;
         [SerializeField]
@@ -58,15 +93,14 @@ namespace BCity
             }
         }
 
-        public void updatePapersWithDaoList(List<PageRecord> listData)
-        {
+    //public Paper[] updatePapersWithDaoList(List<PageRecord> list) {
+        
+    //}
 
-        }
-
-        [HideInInspector]
-        public int StartFlippingPaper = 0;
-        [HideInInspector]
-        public int EndFlippingPaper = 1;
+    //[HideInInspector]
+    public int StartFlippingPaper = 0;
+    //[HideInInspector]
+    public int EndFlippingPaper = 1;
 
         public Vector3 EndBottomLeft
         {
@@ -100,23 +134,107 @@ namespace BCity
         /// </summary>
         bool tweening = false;
 
-        // Use this for initialization
-        void Start()
-        {
-            Canvas[] c = GetComponentsInParent<Canvas>();
-            if (c.Length > 0)
-                canvas = c[c.Length - 1];
-            else
-                Debug.LogError("Book Must be a child to canvas diectly or indirectly");
+    // Use this for initialization
+    void Start()
+    {
+
+        
+    }
+
+    private void InitData(List<PageRecord> datas) {
+        //
+        Debug.Log("此处初始化数据");
+        Debug.Log("数据数量： " + datas.Count);
+
+        GameObject page0 = GameObject.Find("Page0");
+        GameObject page1 = GameObject.Find("Page1");
+        GameObject page2 = GameObject.Find("Page2");
+        GameObject page3 = GameObject.Find("Page3");
+
+        //papers = new Paper[6];
+        // Paper paper = new Paper();
+        papers = new Paper[datas.Count+1];
+
+        for (int i = 0;i<(datas.Count+1);i++) {
+            Debug.Log("new Paper" + i);
+            Paper paper = new Paper();
+            Transform fontTransform = LeftPageTransform;
+            // fontTransform.sizeDelta = new Vector2( yourWidth, yourHeight);
+            Transform backTransform = RightPageTransform;
+
+            if (i == 0) {
+                paper.Front = GameObject.Instantiate(paperFstPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperFontPrefab,transform);
+
+
+            }
+            else if(i == datas.Count) {
+                paper.Front = GameObject.Instantiate(paperBackPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperEndPrefab,transform);
+
+
+            }
+            else {
+                paper.Front = GameObject.Instantiate(paperBackPrefab,transform);
+                paper.Back = GameObject.Instantiate(paperFontPrefab,transform);
+
+
+            }
+
+            // paperFontPrefab
+            // LogoAgent agent = GameObject.Instantiate(_logoAgentPrefab, _logoContainer);
+            papers[i] = paper; 
+        }
+
+        EndFlippingPaper = datas.Count;
+
+        page0.SetActive(false);
+        page1.SetActive(false);
+        page2.SetActive(false);
+        page3.SetActive(false);
+
+
+    }
+
+    public static Texture2D LoadImageByte(string path){
+            FileStream files=new FileStream (Application.dataPath + "/BCityAsset/" +path,FileMode.Open,FileAccess.Read);
+            files.Seek(0,SeekOrigin.Begin);
+            byte[] imgByte=new byte[files.Length];
+
+            //少量临时加载会 红问号 
+            //files.BeginRead(imgByte,0,(int)files.Length,CallBack,files);
+
+            files.Read(imgByte,0,imgByte.Length);
+            files.Close();
+
+            Texture2D tx=new Texture2D (512,512);
+            tx.LoadImage(imgByte);
+            return tx;
+        }
+       static void CallBack(IAsyncResult ar){
+           FileStream fileStream=ar.AsyncState as FileStream;
+            fileStream.Close();
+            fileStream.Dispose();
+       } 
+
+    public void Init(List<PageRecord> datas) {
+        InitData(datas);
+
+        Debug.Log("Start papers.Length is "+papers.Length);
+        Canvas[] c = GetComponentsInParent<Canvas>();
+        if (c.Length > 0)
+            canvas = c[c.Length - 1];
+        else
+            Debug.LogError("Book Must be a child to canvas diectly or indirectly");
 
             UpdatePages();
 
             CalcCurlCriticalPoints();
 
-
-            float pageWidth = BookPanel.rect.width / 2.0f;
-            float pageHeight = BookPanel.rect.height;
-
+        float pageWidth = BookPanel.rect.width / 2.0f;
+        float pageHeight = BookPanel.rect.height;
+        
+        ClippingPlane.rectTransform.sizeDelta = new Vector2(pageWidth * 2 + pageHeight, pageHeight + pageHeight * 2);
 
             ClippingPlane.rectTransform.sizeDelta = new Vector2(pageWidth * 2 + pageHeight, pageHeight + pageHeight * 2);
 
@@ -133,8 +251,34 @@ namespace BCity
             RightPageShadow.rectTransform.sizeDelta = new Vector2(pageWidth, shadowPageHeight);
             RightPageShadow.rectTransform.pivot = new Vector2(0, (pageWidth / 2) / shadowPageHeight);
 
-            LeftPageShadow.rectTransform.sizeDelta = new Vector2(pageWidth, shadowPageHeight);
-            LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
+
+
+    /// <summary>
+    /// transform point from global (world-space) to local space
+    /// </summary>
+    /// <param name="global">poit iin world space</param>
+    /// <returns></returns>
+    public Vector3 transformPoint(Vector3 global)
+    {
+
+        Debug.Log("transformPoint");
+        Vector2 localPos = BookPanel.InverseTransformPoint(global);
+        return localPos;
+    }
+    /// <summary>
+    /// transform mouse position to local space
+    /// </summary>
+    /// <param name="mouseScreenPos"></param>
+    /// <returns></returns>
+    public Vector3 transformPointMousePosition(Vector3 mouseScreenPos)
+    {
+        Debug.Log("transformPointMousePosition");
+        if(canvas.renderMode== RenderMode.ScreenSpaceCamera )
+        {
+            Vector3 mouseWorldPos = canvas.worldCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, canvas.planeDistance));
+            Vector2 localPos = BookPanel.InverseTransformPoint(mouseWorldPos);
+
+            return localPos;
         }
 
         /// <summary>
@@ -159,27 +303,25 @@ namespace BCity
                 Vector3 mouseWorldPos = canvas.worldCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, canvas.planeDistance));
                 Vector2 localPos = BookPanel.InverseTransformPoint(mouseWorldPos);
 
-                return localPos;
-            }
-            else if (canvas.renderMode == RenderMode.WorldSpace)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Vector3 globalEBR = transform.TransformPoint(ebr);
-                Vector3 globalEBL = transform.TransformPoint(ebl);
-                Vector3 globalSt = transform.TransformPoint(st);
-                Plane p = new Plane(globalEBR, globalEBL, globalSt);
-                float distance;
-                p.Raycast(ray, out distance);
-                Vector2 localPos = BookPanel.InverseTransformPoint(ray.GetPoint(distance));
-                return localPos;
-            }
-            else
-            {
-                //Screen Space Overlay
-                Vector2 localPos = BookPanel.InverseTransformPoint(mouseScreenPos);
-                return localPos;
-            }
+    /// <summary>
+    /// Update page orders
+    /// This function should be called whenever the current page changed, the dragging of the page started or the page has been flipped
+    /// </summary>
+    public void UpdatePages()
+    {
+        Debug.Log(" Update Pages ! ");
 
+        int previousPaper = pageDragging ? currentPaper - 2 : currentPaper - 1;
+
+        Debug.Log ("previousPaper is "+previousPaper);
+
+        //Hide all pages
+        for (int i = 0; i < papers.Length; i++)
+        {
+            BookUtility.HidePage(papers[i].Front);
+            papers[i].Front.transform.SetParent(BookPanel.transform);
+            BookUtility.HidePage(papers[i].Back);
+            papers[i].Back.transform.SetParent(BookPanel.transform);
         }
 
         /// <summary>
@@ -199,7 +341,10 @@ namespace BCity
                 papers[i].Back.transform.SetParent(BookPanel.transform);
             }
 
-            if (hasTransparentPages)
+            Debug.Log("papers.Length is "+papers.Length);
+
+            //Show the front page of all next papers
+            for (int i = papers.Length - 1; i >= currentPaper; i--)
             {
                 //Show the back page of all previous papers
                 for (int i = 0; i <= previousPaper; i++)
@@ -286,8 +431,12 @@ namespace BCity
         }
 
 
-        //mouse interaction events call back
-        public void OnMouseDragRightPage()
+  
+    //mouse interaction events call back
+    public void OnMouseDragRightPage()
+    {
+        Debug.Log("OnMouseDragRightPage");
+        if (interactable && !tweening)
         {
             if (interactable && !tweening)
             {
@@ -303,28 +452,40 @@ namespace BCity
             mode = FlipMode.RightToLeft;
             f = point;
 
-            ClippingPlane.rectTransform.pivot = new Vector2(1, 0.35f);
-            currentPaper += 1;
+    }
+    public void DragRightPageToPoint(Vector3 point)
+    {
+        Debug.Log("DragRightPageToPoint");
+        if (currentPaper > EndFlippingPaper) return;
+        pageDragging = true;
+        mode = FlipMode.RightToLeft;
+        f = point;
 
-            UpdatePages();
+        ClippingPlane.rectTransform.pivot = new Vector2(1, 0.35f);
+        currentPaper += 1;
 
-            Left = papers[currentPaper - 1].Front.GetComponent<Image>();
-            BookUtility.ShowPage(Left.gameObject);
-            Left.rectTransform.pivot = new Vector2(0, 0);
-            Left.transform.position = RightPageTransform.transform.position;
-            Left.transform.localEulerAngles = new Vector3(0, 0, 0);
+        UpdatePages();
 
-            Right = papers[currentPaper - 1].Back.GetComponent<Image>();
-            BookUtility.ShowPage(Right.gameObject);
-            Right.transform.position = RightPageTransform.transform.position;
-            Right.transform.localEulerAngles = new Vector3(0, 0, 0);
+        Left = papers[currentPaper - 1].Front.GetComponent<Image>();
+        BookUtility.ShowPage(Left.gameObject);
+        Left.rectTransform.pivot = new Vector2(0, 0);
+        Left.transform.position = RightPageTransform.transform.position;
+        Left.transform.localEulerAngles = new Vector3(0, 0, 0);
 
-            if (enableShadowEffect) Shadow.gameObject.SetActive(true);
-            ClippingPlane.gameObject.SetActive(true);
+        Right = papers[currentPaper - 1].Back.GetComponent<Image>();
+        BookUtility.ShowPage(Right.gameObject);
+        Right.transform.position = RightPageTransform.transform.position;
+        Right.transform.localEulerAngles = new Vector3(0, 0, 0);
+        
+        if (enableShadowEffect) Shadow.gameObject.SetActive(true);
+        ClippingPlane.gameObject.SetActive(true);
 
-            UpdateBookRTLToPoint(f);
-        }
-        public void OnMouseDragLeftPage()
+        UpdateBookRTLToPoint(f);
+    }
+    public void OnMouseDragLeftPage()
+    {
+        Debug.Log("OnMouseDragLeftPage");
+        if (interactable && !tweening)
         {
             if (interactable && !tweening)
             {
@@ -340,7 +501,14 @@ namespace BCity
             mode = FlipMode.LeftToRight;
             f = point;
 
-            UpdatePages();
+    }
+    public void DragLeftPageToPoint(Vector3 point)
+    {
+        Debug.Log("DragLeftPageToPoint");
+        if (currentPaper <= StartFlippingPaper) return;
+        pageDragging = true;
+        mode = FlipMode.LeftToRight;
+        f = point;
 
             ClippingPlane.rectTransform.pivot = new Vector2(0, 0.35f);
 
@@ -383,8 +551,20 @@ namespace BCity
             }
         }
 
-        // Update is called once per frame
-        void Update()
+        if (enableShadowEffect) ShadowLTR.gameObject.SetActive(true);
+        ClippingPlane.gameObject.SetActive(true);
+        UpdateBookLTRToPoint(f);
+    }
+    public void OnMouseRelease()
+    {
+        Debug.Log("OnMouseRelease");
+        if (interactable )
+            ReleasePage();
+    }
+    public void ReleasePage()
+    {
+        Debug.Log("OnMouseRelease");
+        if (pageDragging)
         {
             if (pageDragging && interactable)
             {
@@ -422,6 +602,39 @@ namespace BCity
             if (OnFlip != null)
                 OnFlip.Invoke();
         }
+    }
+    public void UpdateBook()
+    {
+        f = Vector3.Lerp(f, transformPointMousePosition(Input.mousePosition), Time.deltaTime * 10);
+        if (mode == FlipMode.RightToLeft)
+            UpdateBookRTLToPoint(f);
+        else
+            UpdateBookLTRToPoint(f);
+    }
+    
+    /// <summary>
+    /// This function called when the page dragging point reached its distenation after releasing the mouse
+    /// This function will call the OnFlip invocation list
+    /// if you need to call any fnction after the page flipped just add it to the OnFlip invocation list
+    /// </summary>
+    public void Flip()
+    {
+        Debug.Log("Flip");
+        pageDragging = false;
+
+        if (mode == FlipMode.LeftToRight)
+            currentPaper -= 1;
+        //Debug.Log(currentPaper);
+        Left.transform.SetParent(BookPanel.transform, true);
+        Left.rectTransform.pivot = new Vector2(0, 0);
+        Right.transform.SetParent(BookPanel.transform, true);
+        UpdatePages();
+        Shadow.gameObject.SetActive(false);
+        ShadowLTR.gameObject.SetActive(false);
+        ClippingPlane.gameObject.SetActive(false);
+        if (OnFlip != null)
+            OnFlip.Invoke();
+    }
 
         public void TweenForward()
         {
@@ -485,24 +698,40 @@ namespace BCity
             }
         }
 
-        #region Page Curl Internal Calculations
-        //for more info about this part please check this link : http://rbarraza.com/html5-canvas-pageflip/
+    #region Page Curl Internal Calculations
+    //for more info about this part please check this link : http://rbarraza.com/html5-canvas-pageflip/
 
-        float radius1, radius2;
-        //Spine Bottom
-        Vector3 sb;
-        //Spine Top
-        Vector3 st;
-        //corner of the page
-        Vector3 c;
-        //Edge Bottom Right
-        Vector3 ebr;
-        //Edge Bottom Left
-        Vector3 ebl;
-        //follow point 
-        Vector3 f;
-
-        private void CalcCurlCriticalPoints()
+    float radius1, radius2;
+    //Spine Bottom
+    Vector3 sb;
+    //Spine Top
+    Vector3 st;
+    //corner of the page
+    Vector3 c;
+    //Edge Bottom Right
+    Vector3 ebr;
+    //Edge Bottom Left
+    Vector3 ebl;
+    //follow point 
+    Vector3 f;
+    
+    private void CalcCurlCriticalPoints()
+    {
+        sb = new Vector3(0, -BookPanel.rect.height / 2);
+        ebr = new Vector3(BookPanel.rect.width / 2, -BookPanel.rect.height / 2);
+        ebl = new Vector3(-BookPanel.rect.width / 2, -BookPanel.rect.height / 2);
+        st = new Vector3(0, BookPanel.rect.height / 2);
+        radius1 = Vector2.Distance(sb, ebr);
+        float pageWidth = BookPanel.rect.width / 2.0f;
+        float pageHeight = BookPanel.rect.height;
+        radius2 = Mathf.Sqrt(pageWidth * pageWidth + pageHeight * pageHeight);
+    }
+    public void UpdateBookRTLToPoint(Vector3 followLocation)
+    {
+        Debug.Log("UpdateBookRTLToPoint");
+        mode = FlipMode.RightToLeft;
+        f = followLocation;
+        if (enableShadowEffect)
         {
             sb = new Vector3(0, -BookPanel.rect.height / 2);
             ebr = new Vector3(BookPanel.rect.width / 2, -BookPanel.rect.height / 2);
@@ -554,7 +783,23 @@ namespace BCity
             Left.transform.SetParent(ClippingPlane.transform, true);
             Left.transform.SetAsFirstSibling();
 
-            Shadow.rectTransform.SetParent(Right.rectTransform, true);
+        Shadow.rectTransform.SetParent(Right.rectTransform, true);
+    }
+    public void UpdateBookLTRToPoint(Vector3 followLocation)
+    {
+        Debug.Log("UpdateBookLTRToPoint");
+        mode = FlipMode.LeftToRight;
+        f = followLocation;
+        if (enableShadowEffect)
+        {
+            ShadowLTR.transform.SetParent(ClippingPlane.transform, true);
+            ShadowLTR.transform.localPosition = new Vector3(0, 0, 0);
+            ShadowLTR.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+            Shadow.transform.SetParent(Right.transform);
+            Shadow.rectTransform.anchoredPosition = new Vector3(0, 0, 0);
+            Shadow.transform.localEulerAngles = Vector3.zero;
+            Shadow.gameObject.SetActive(true);
         }
         public void UpdateBookLTRToPoint(Vector3 followLocation)
         {
