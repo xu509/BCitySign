@@ -23,8 +23,6 @@ namespace BCity
         public MenuAgent menuAgentPrefab { get { return _menuAgentPrefab; } }
 
 
-        [SerializeField] GoLeftDisplayBehavior _goLeftDisplayBehavior;
-
         [SerializeField,Range(0f,20f)] float _moveSpeed;
         public float moveSpeed { get { return _moveSpeed; } }
 
@@ -38,30 +36,15 @@ namespace BCity
 
         public void Init() {
             _screenProtectStatus = ScreenProtectStatus.Prepare;
-            _row = 0;
-            _column = 0;
 
-            _goLeftDisplayBehavior.Init(this);
         }
 
         public void Run() {
-            if (_screenProtectStatus == ScreenProtectStatus.Prepare) {
-                // 创建卡片
-                _screenProtectStatus = ScreenProtectStatus.Init;
 
-                CreateAgents();
-                // 进行创建卡片
-                _screenProtectStatus = ScreenProtectStatus.InitComplete;                
-            }
+            // run 
 
-            if (_screenProtectStatus == ScreenProtectStatus.InitComplete) {
-                _screenProtectStatus = ScreenProtectStatus.Running;
-            }
 
-            if (_screenProtectStatus == ScreenProtectStatus.Running) {
-                // 进行移动
-                _goLeftDisplayBehavior.Run();
-            }        
+
         }
 
 
