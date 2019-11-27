@@ -11,13 +11,19 @@ namespace BCity {
         [SerializeField] ScreenProtectManager _screenProtectManager;
         [SerializeField] DaoManager _daoManager;
 
+        [SerializeField] ReminderAgent _reminderAgent;
+        public ReminderAgent reminderAgent { get { return _reminderAgent; } }
+
 
         /// <summary>
         /// 相册大小
         /// </summary>
         [SerializeField] int _albumSize;
+        
         public int albumSize { get { return _albumSize; } }
 
+        [SerializeField] int _activeTime;
+        public int activeTime { get { return _activeTime; } }
 
 
         public ScreenProtectManager screenProtectManager { get { return _screenProtectManager; } }

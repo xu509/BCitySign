@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 400692013}
   - component: {fileID: 400692015}
   - component: {fileID: 400692016}
+  - component: {fileID: 400692014}
   m_Layer: 5
   m_Name: Enter
   m_TagString: Untagged
@@ -224,6 +225,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1063, y: 1063}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &400692014
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400692012}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!222 &400692015
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -925,6 +938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bdac66107c88414ea072bd22be4519f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enterAgent: {fileID: 400692016}
 --- !u!114 &1507205369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1590,5 +1604,15 @@ PrefabInstance:
       propertyPath: _albumSize
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 8471315827905758490, guid: 1e1dc77adc485494681da009dcf515bf,
+        type: 3}
+      propertyPath: _activeTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8471315827905758490, guid: 1e1dc77adc485494681da009dcf515bf,
+        type: 3}
+      propertyPath: _reminderAgent
+      value: 
+      objectReference: {fileID: 1507205368}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e1dc77adc485494681da009dcf515bf, type: 3}
