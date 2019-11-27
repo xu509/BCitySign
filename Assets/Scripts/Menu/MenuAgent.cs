@@ -56,6 +56,7 @@ namespace BCity {
             _signAgent = null;
             _showAlbum = false;
             _showSign = false;
+            _showAlbumSet = false;
             _menuContainer.gameObject.SetActive(true);
         }
 
