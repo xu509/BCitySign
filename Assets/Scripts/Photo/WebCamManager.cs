@@ -81,7 +81,10 @@ namespace BCity {
                     }
 
                     photoRaw.texture = camTexture;
-                    camTexture.Play();
+
+                    if (!camTexture.isPlaying) {
+                        camTexture.Play();
+                    }                    
 
                     // 开始倒数
                     timer = 3;
@@ -174,6 +177,12 @@ namespace BCity {
             _capturePhotoImage.gameObject.SetActive(false);
 
             StartCountDown();
+        }
+
+        public void StopCamera() {
+            if (camTexture.isPlaying) {
+                camTexture.Stop();
+            }
         }
 
 
