@@ -32,7 +32,24 @@ namespace BCity {
             //var total = GetListTotal();
             var datas = _dataSource.GetData();
 
-            var result = datas.pageRecords.GetRange(start, size);
+
+
+            if (start > datas.pageRecords.Count - 1) {
+                return null;
+            }
+
+            int si = size;
+
+
+            if ((start + size) > datas.pageRecords.Count - 1) {
+                si = datas.pageRecords.Count - start;
+            }
+
+            var result = datas.pageRecords.GetRange(start, si);
+
+            Debug.Log("DAO : start - " + start + " size - " + si);
+
+
             return result;            
         }
 

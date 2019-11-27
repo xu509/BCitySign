@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 namespace BCity
 {
@@ -67,14 +68,23 @@ namespace BCity
             for (int i = 0; i < number; i++)
             {
                 var albumCoverAgent = Instantiate<AlbumCoverAgent>(_albumCoverAgentPrefab, _albumCoverContainer);
-                Debug.Log("创建一个");
-                Debug.Log(albumCoverAgent.GetComponent<RectTransform>().anchoredPosition);
 
                 var position = albumCoverAgent.GetComponent<RectTransform>();
 
                 albumCoverAgent.GetComponent<RectTransform>().anchoredPosition = position.anchoredPosition + new Vector2(gap * i, 0);
+                albumCoverAgent.Init(DateTime.Now, DateTime.Now, i + 1, this);
             }
         }
+
+
+
+        /// <summary>
+        ///     打开相册集
+        /// </summary>
+        public void OpenAlbum(int page) {
+            _manager.menuAgent.OpenAlbum(page,false);
+        }
+
 
 
         /// <summary>
