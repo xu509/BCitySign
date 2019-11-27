@@ -57,9 +57,14 @@ namespace BCity {
                     {
 
                         _normalContainer.gameObject.SetActive(true);
+
+                        Debug.Log(_pageRecord.PhotoAddress);
+
                         // 设置照片
                         if (_pageRecord.PhotoAddress == null)
                         {
+                            Debug.Log("111111");
+
                             _photoImage.sprite = _emptyImage;
                         }
                         else {

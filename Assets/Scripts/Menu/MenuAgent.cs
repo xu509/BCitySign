@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using System;
 
@@ -32,8 +33,17 @@ namespace BCity {
         PhotoAgent _photoAgent;
         OverviewPanelAgent _overviewAgent;
 
+        [SerializeField] CanvasGroup menuPane;
 
+        void Start() {
+            FadeInMenu();
+        }
 
+        public void FadeInMenu(){
+            Debug.Log("FadeInMenu");
+            menuPane.alpha = 0;
+            menuPane.GetComponent<CanvasGroup>().DOFade(1, 0.5f);
+        }
 
         public void Recover() {
             _albumSetsAgent = null;
