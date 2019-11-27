@@ -162,14 +162,18 @@ public class BookPro : MonoBehaviour
                 paper.Back = GameObject.Instantiate(paperFontPrefab, transform);
 
                 BookLeftPage leftBook = paper.Back.GetComponent<BookLeftPage>();
-                BookRightPage rightBook = paper.Back.GetComponent<BookRightPage>();
+                BookRightPage rightBook = paper.Front.GetComponent<BookRightPage>();
                 RawImage signImg = leftBook.signImg;
-                PageRecord record = datas[i];
+                PageRecord record = datas[i-1];
                 signImg.texture = LoadImageByte(record.SignAddress);
 
-                /*RawImage photoImg = rightBook.photoImg;
-                PageRecord record2 = datas[i+1];
-                photoImg.texture = LoadImageByte(record2.PhotoAddress);*/
+                PageRecord record2 = datas[i];
+                if (record2.PhotoAddress != null) {
+                    Debug.Log("record2.PhotoAddress is "+record2.PhotoAddress);
+                    RawImage photoImg = rightBook.photoImg;
+                    photoImg.texture = LoadImageByte(record2.PhotoAddress);
+                }
+                
             }
 
             // paperFontPrefab
