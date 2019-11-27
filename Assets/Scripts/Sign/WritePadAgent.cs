@@ -85,6 +85,15 @@ namespace BCity
 
         }
 
+        public void ClearPad() {
+            rawWidth = raw.rectTransform.rect.width;
+            rawHeight = raw.rectTransform.rect.height;
+            texRender = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32);
+            Clear(texRender);
+            DrawImage();
+
+        }
+
         Vector3 startPosition = Vector3.zero;
         Vector3 endPosition = Vector3.zero;
         void FixedUpdate()
