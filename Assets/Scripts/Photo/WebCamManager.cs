@@ -32,6 +32,7 @@ namespace BCity {
         public Text takePhotoText;
         public Button btnFinish;
         public Button btnRetake;
+        public Image hrImage;
 
 
         private int timer;
@@ -144,6 +145,7 @@ namespace BCity {
             takePhotoText.gameObject.SetActive(false);
             btnFinish.gameObject.SetActive(true);
             btnRetake.gameObject.SetActive(true);
+            hrImage.gameObject.SetActive(true);
             camBlackOverView.gameObject.SetActive(false);
 
             Texture2D t2d = new Texture2D(camTexture.width, camTexture.height, TextureFormat.ARGB32, true);
@@ -171,6 +173,7 @@ namespace BCity {
             takePhotoText.gameObject.SetActive(true);
             btnFinish.gameObject.SetActive(false);
             btnRetake.gameObject.SetActive(false);
+            hrImage.gameObject.SetActive(false);
             camBlackOverView.gameObject.SetActive(false);
 
             timer = 3;

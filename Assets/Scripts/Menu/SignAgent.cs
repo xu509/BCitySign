@@ -35,8 +35,8 @@ namespace BCity {
         /// <summary>
         ///     关闭
         /// </summary>
-        public void Close() { 
-        
+        public void Close() {
+            Destroy(gameObject);
         }
 
        
@@ -63,7 +63,10 @@ namespace BCity {
         }
 
 
-
+        public void DoReturn() {
+            _menuAgent.ShowTool();
+            Close();
+        }
 
 
         /// <summary>
