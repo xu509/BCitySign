@@ -11,8 +11,22 @@ namespace BCity {
         [SerializeField] ScreenProtectManager _screenProtectManager;
         [SerializeField] DaoManager _daoManager;
 
+
+        /// <summary>
+        /// 相册大小
+        /// </summary>
+        [SerializeField] int _albumSize;
+        public int albumSize { get { return _albumSize; } }
+
+
+
         public ScreenProtectManager screenProtectManager { get { return _screenProtectManager; } }
         public DaoManager daoManager { get { return _daoManager; } }
+
+
+        private MenuAgent _menuAgent;
+        public MenuAgent menuAgent { set { _menuAgent = value; } get { return _menuAgent; } }
+
 
         // Start is called before the first frame update
         void Start()

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BCity {
     public enum FromSceneEnum
     {
-        Menu,Photo
+        Menu,Photo,Sign
 
 
     }

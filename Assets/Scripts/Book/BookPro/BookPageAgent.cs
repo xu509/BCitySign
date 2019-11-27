@@ -47,9 +47,6 @@ namespace BCity {
 
                     if (_bookPageType == BookPageType.Left)
                     {
-                        Debug.Log("设置签名与时间");
-
-
                         // 设置签名图片
                         _signImage.sprite = _manager.daoManager.GetImageSprite(_pageRecord.SignAddress);
 

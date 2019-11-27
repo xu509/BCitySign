@@ -24,6 +24,7 @@ namespace BCity {
 
         private int _turnToPage;
         List<PageRecord> _pageRecords;
+        private bool _isPaged = false;
 
 
         Canvas canvas;
@@ -114,9 +115,15 @@ namespace BCity {
 
 
 
-        public void Init(List<PageRecord> pageRecords,int pageNumber) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageRecords"></param>
+        /// <param name="toPage">目标页码</param>
+        /// <param name="page">第几本书</param>
+        public void Init(List<PageRecord> pageRecords,int toPage) {
             _pageRecords = pageRecords;
-            _turnToPage = pageNumber;
+            _turnToPage = toPage;
 
             if (pageRecords == null)
             {
@@ -468,6 +475,30 @@ namespace BCity {
             ClippingPlane.gameObject.SetActive(false);
             if (OnFlip != null)
                 OnFlip.Invoke();
+
+            Debug.Log("翻页效果结束 currentPaper ： " + currentPaper);
+
+            if (_isPaged) {
+
+                //RefreshPagePool();
+
+                //int to;
+
+                //if (mode == FlipMode.LeftToRight)
+                //{
+                //    to = currentPaper + 1;
+                //}
+                //else
+                //{
+                //    to = currentPaper - 1;
+                //}
+
+                //Debug.Log("翻页至 currentPaper ： " + to);
+
+                //TurnToPages(currentPaper);
+            }
+
+
         }
 
         public void TweenForward()
@@ -537,105 +568,106 @@ namespace BCity {
         {
             var recordsCount = _pageRecords.Count;
 
-            if (_turnToPage == 0) {
+            // 当没有内容时
+            if (recordsCount == 0)
+            {
+                // 创建第一页
+                var coverPaper = CreateCover();
+                coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
 
-                // 当没有内容时
-                if (recordsCount == 0)
+                var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+                pageLeft.Init(null, false, true);
+                pageLeft.GetComponent<RectTransform>().SetSiblingIndex(1);
+
+                AddPage(coverPaper.gameObject, pageLeft.gameObject);
+
+                // 创建第二页
+                var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
+                pageRight.Init(null, false, true);
+                pageRight.GetComponent<RectTransform>().SetSiblingIndex(2);
+
+                var coverBackPage = CreateCoverBack();
+                coverBackPage.GetComponent<RectTransform>().SetSiblingIndex(3);
+
+                AddPage(pageRight.gameObject, coverBackPage.gameObject);
+            }
+            else if (recordsCount > 0) {
+                    
+                int size;
+                bool hasOverSize = false;
+                _isPaged = false;
+
+                if (recordsCount > _size)
                 {
+                    size = _size;
+                    hasOverSize = true;
+                }
+                else {
+                    size = recordsCount;
+                }
+
+                for (int i = 0; i < size + 1; i++) {
+                    Paper paper = new Paper();
+                    papers.Add(paper);                    
+                }
+
+
+                EndFlippingPaper = size;
+
+                if (hasOverSize)
+                {
+                    _isPaged = true;
+                    Debug.Log("进入分页逻辑");
+                    RefreshPagePool();
+
+
+                    Debug.Log("papers size : " + papers.Count);
+                    Debug.Log("_pageRecords size : " + _pageRecords.Count);
+
+                }
+                // 未超出容量
+                else
+                {
+                    _isPaged = false;
+                    Debug.Log("未分页逻辑");
+                    Debug.Log("papers size : " + papers.Count);
+                    Debug.Log("_pageRecords size : " + _pageRecords.Count);
+
                     // 创建第一页
                     var coverPaper = CreateCover();
                     coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
+                    papers[0].Front = coverPaper;
+                    coverPaper.gameObject.name = "paper-cover";
 
-                    var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
-                    pageLeft.Init(null, false, true);
-                    pageLeft.GetComponent<RectTransform>().SetSiblingIndex(1);
 
-                    AddPage(coverPaper.gameObject, pageLeft.gameObject);
+                    for (int i = 0; i < _pageRecords.Count; i++) {
+                        var data = _pageRecords[i];
 
-                    // 创建第二页
-                    var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
-                    pageRight.Init(null, false, true);
-                    pageRight.GetComponent<RectTransform>().SetSiblingIndex(2);
+                        var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+                        pageLeft.Init(data, false, false);
+                        pageLeft.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 1);
+                        papers[i].Back = pageLeft.gameObject;
+                        pageLeft.gameObject.name = "paper-" + (2 * i + 1);
+                        Debug.Log("Paper - " + i + " => back is => ##" + pageLeft.gameObject.name);
 
-                    var coverBackPage = CreateCoverBack();
-                    coverBackPage.GetComponent<RectTransform>().SetSiblingIndex(3);
 
-                    AddPage(pageRight.gameObject, coverBackPage.gameObject);
+                        var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
+                        pageRight.Init(data, false, false);
+                        pageRight.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 2);
+                        papers[i + 1].Front = pageRight.gameObject;
+                        pageRight.gameObject.name = "paper-" + (2 * i + 2);
+
+                        Debug.Log("Paper - " + (i+1) + " => Front is => ##" + pageRight.gameObject.name);
+                    }
+
+
+                    var coverBack = CreateCoverBack();
+                    coverBack.GetComponent<RectTransform>().SetSiblingIndex(papers.Count * 2 + 1);
+                    coverBack.gameObject.name = "paper-back";
+
+                    papers[papers.Count - 1].Back = coverBack.gameObject;
+                    Debug.Log("Paper - " + (papers.Count - 1) + " back is 封底");
                 }
-                else if (recordsCount > 0) {
-                    
-                    int size;
-                    bool hasOverSize = false;
-
-                    if (recordsCount > _size)
-                    {
-                        size = _size;
-                        hasOverSize = true;
-                    }
-                    else {
-                        size = recordsCount;
-                    }
-
-                    for (int i = 0; i < size + 1; i++) {
-                        Paper paper = new Paper();
-                        papers.Add(paper);                    
-                    }
-
-
-                    EndFlippingPaper = size;
-
-                    if (hasOverSize)
-                    {
-
-                    }
-                    // 未超出容量
-                    else
-                    {
-                        Debug.Log("papers size : " + papers.Count);
-                        Debug.Log("_pageRecords size : " + _pageRecords.Count);
-
-                        // 创建第一页
-                        var coverPaper = CreateCover();
-                        coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
-                        papers[0].Front = coverPaper;
-                        coverPaper.gameObject.name = "paper-cover";
-
-
-                        for (int i = 0; i < _pageRecords.Count; i++) {
-                            var data = _pageRecords[i];
-
-                            var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
-                            pageLeft.Init(data, false, false);
-                            pageLeft.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 1);
-                            papers[i].Back = pageLeft.gameObject;
-                            pageLeft.gameObject.name = "paper-" + (2 * i + 1);
-                            Debug.Log("Paper - " + i + " => back is => ##" + pageLeft.gameObject.name);
-
-
-                            var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
-                            pageRight.Init(data, false, false);
-                            pageRight.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 2);
-                            papers[i + 1].Front = pageRight.gameObject;
-                            pageRight.gameObject.name = "paper-" + (2 * i + 2);
-
-                            Debug.Log("Paper - " + (i+1) + " => Front is => ##" + pageRight.gameObject.name);
-
-
-                        }
-
-
-                        var coverBack = CreateCoverBack();
-                        coverBack.GetComponent<RectTransform>().SetSiblingIndex(papers.Count * 2 + 1);
-                        coverBack.gameObject.name = "paper-back";
-
-                        papers[papers.Count - 1].Back = coverBack.gameObject;
-                        Debug.Log("Paper - " + (papers.Count - 1) + " back is 封底");
-
-
-                    }
-
-                }
-
 
             }
         }
@@ -646,12 +678,12 @@ namespace BCity {
         /// <param name="page"></param>
         private void TurnToPages(int page) {
 
-            Debug.Log("翻页至 ： " + page);
+            currentPaper = page;
+            UpdatePages();
 
-            if (page != 0) {
-                currentPaper = page;
-                UpdatePages();
-            }           
+            //if (page != 0) {
+
+            //}           
         }
 
 
@@ -685,6 +717,70 @@ namespace BCity {
             paper.Back = back;
             papers.Add(paper);
         }
+
+
+        private void RefreshPagePool() {
+            // 当前页码 ： _turnToPage currentpage
+            // 大小 ： _size
+
+            Debug.Log("currentPaper In Refresh Page Pool : " + currentPaper);
+
+
+            // 获取创建的起始坐标
+            int startIndex = currentPaper - Mathf.CeilToInt(_size / 2f);
+            if (startIndex < 0) {
+                startIndex = 0;
+            }
+
+            if ((currentPaper + Mathf.CeilToInt(_size / 2f)) >= _pageRecords.Count) {
+                startIndex = _pageRecords.Count - _size;
+            }
+
+            Debug.Log("起始坐标 ： " + startIndex);
+
+            // 判断是否要生成封面
+            //if (startIndex == 0) {
+            var coverPaper = CreateCover();
+            coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
+            papers[0].Front = coverPaper;
+            coverPaper.gameObject.name = "paper-cover";
+            //}
+
+            for (int i = 0; i < _size; i++)
+            {
+                int dataIndex = i + startIndex;
+
+                var data = _pageRecords[dataIndex];
+
+                var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+                pageLeft.Init(data, false, false);
+                pageLeft.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 1);
+                papers[i].Back = pageLeft.gameObject;
+                pageLeft.gameObject.name = "paper-" + (2 * i + 1);
+                Debug.Log("Paper - " + i + " => back is => ##" + pageLeft.gameObject.name);
+
+                var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
+                pageRight.Init(data, false, false);
+                pageRight.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 2);
+                papers[i + 1].Front = pageRight.gameObject;
+                pageRight.gameObject.name = "paper-" + (2 * i + 2);
+                
+            }
+
+            // 创建封底
+            var coverBack = CreateCoverBack();
+            coverBack.GetComponent<RectTransform>().SetSiblingIndex(papers.Count * 2 + 1);
+            coverBack.gameObject.name = "paper-back";
+            papers[papers.Count - 1].Back = coverBack.gameObject;
+
+
+            //Debug.Log("_turnToPage : " + _turnToPage);
+            //TurnToPages(_turnToPage);
+
+
+        }
+
+
 
 
 

@@ -1585,5 +1585,10 @@ PrefabInstance:
       propertyPath: _opContainer
       value: 
       objectReference: {fileID: 263274622}
+    - target: {fileID: 8471315827905758490, guid: 1e1dc77adc485494681da009dcf515bf,
+        type: 3}
+      propertyPath: _albumSize
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e1dc77adc485494681da009dcf515bf, type: 3}

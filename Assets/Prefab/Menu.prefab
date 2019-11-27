@@ -406,7 +406,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6a1a807a4fc6d354c90f8df373a12ae5, type: 3}
+    m_Font: {fileID: 12800000, guid: 72bc777bc53fd8a489a59e4f270e8139, type: 3}
     m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
@@ -702,7 +702,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6a1a807a4fc6d354c90f8df373a12ae5, type: 3}
+    m_Font: {fileID: 12800000, guid: 72bc777bc53fd8a489a59e4f270e8139, type: 3}
     m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
@@ -900,9 +900,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _menuContainer: {fileID: 6806388499244946533}
-  _albumAgentPrefab: {fileID: 9032110842148817440, guid: 3ebe663133ad80b40b4181f110f28623,
+  _albumSetsAgentPrefab: {fileID: 1777124884720756483, guid: 25e497cb49be97f45a06df1993e4beae,
     type: 3}
-  _albumAgentContainer: {fileID: 6806388498394969436}
+  _albumSetsAgentContainer: {fileID: 6806388498394969436}
   _signAgentPrefab: {fileID: 9003596797438673579, guid: b0b71aba51c61cb408aa037f598ab6db,
     type: 3}
   _signAgentContainer: {fileID: 6806388498476867883}
@@ -1057,7 +1057,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6a1a807a4fc6d354c90f8df373a12ae5, type: 3}
+    m_Font: {fileID: 12800000, guid: 72bc777bc53fd8a489a59e4f270e8139, type: 3}
     m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0

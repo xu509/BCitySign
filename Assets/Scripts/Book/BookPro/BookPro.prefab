@@ -421,7 +421,7 @@ MonoBehaviour:
     type: 3}
   _bookPageAgentRightPrefab: {fileID: 3143080493611053541, guid: 887cad356b2011b44b60855c03f7ebad,
     type: 3}
-  _size: 5
+  _size: 40
   BookPanel: {fileID: 224000012149926270}
   ClippingPlane: {fileID: 114000011970458150}
   Shadow: {fileID: 114000010565270900}

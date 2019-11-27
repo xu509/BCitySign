@@ -12,8 +12,8 @@ namespace BCity {
     public class MenuAgent : MonoBehaviour
     {
         [SerializeField,Header("Menu 容器")] RectTransform _menuContainer;
-        [SerializeField,Header("相册")] AlbumAgent _albumAgentPrefab;
-        [SerializeField] Transform _albumAgentContainer;
+        [SerializeField,Header("相册集合")] AlbumSetsAgent _albumSetsAgentPrefab;
+        [SerializeField] Transform _albumSetsAgentContainer;
         [SerializeField,Header("签字板")] SignAgent _signAgentPrefab;
         [SerializeField] Transform _signAgentContainer;
         [SerializeField, Header("拍照")] PhotoAgent _photoAgentPrefab;
@@ -27,7 +27,7 @@ namespace BCity {
         bool _showPhoto = false;
         bool _showOverview = false;
 
-        AlbumAgent _albumAgent;
+        AlbumSetsAgent _albumSetsAgent;
         SignAgent _signAgent;
         PhotoAgent _photoAgent;
         OverviewPanelAgent _overviewAgent;
@@ -36,7 +36,7 @@ namespace BCity {
 
 
         public void Recover() {
-            _albumAgent = null;
+            _albumSetsAgent = null;
             _signAgent = null;
             _showAlbum = false;
             _showSign = false;
@@ -63,14 +63,14 @@ namespace BCity {
             _menuContainer.gameObject.SetActive(false);
             if (!_showAlbum)
             {
-                if (_albumAgent == null)
+                if (_albumSetsAgent == null)
                 {
-                    _albumAgent = Instantiate(_albumAgentPrefab, _albumAgentContainer);
-                    _albumAgent.Init(this);
-                    Debug.Log("_albumAgent init");
+                    _albumSetsAgent = Instantiate(_albumSetsAgentPrefab, _albumSetsAgentContainer);
+                    _albumSetsAgent.Init(this);
+                    Debug.Log("_albumSetsAgent init");
 
                 }
-                _albumAgent.Open(fromScene);
+                _albumSetsAgent.Open();
                 _showAlbum = true; ;
             }
         }

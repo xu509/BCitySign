@@ -13,12 +13,24 @@ namespace BCity
         [SerializeField] AutoFlip _flipAgent;
 
         [SerializeField, Header("Scroll")] ScrollAreaAgent _scrollAreaAgent;
+        private BCManager _manager;
 
-        public void Init(FromSceneEnum fromSceneEnum) {
+        public void Init(FromSceneEnum fromSceneEnum,int page) {
+
+            Debug.Log("初始化bookagent ： " + fromSceneEnum);
+            _manager = GameObject.Find("MainBrain").GetComponent<BCManager>();
+
 
             // 获取数据
             IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
-            List<PageRecord> list = _daoManagerServ.GetList(0, (int)_daoManagerServ.GetListTotal());
+
+            int size = _manager.albumSize;
+            int start = (page - 1) * size;
+            int total = (int)_daoManagerServ.GetListTotal();
+
+            List<PageRecord> list = _daoManagerServ.GetList(start, size);
+
+
             //PageRecord record = list[0];
             //Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
             //Debug.Log("record PhotoAddress " + record.PhotoAddress);
@@ -29,8 +41,13 @@ namespace BCity
             {
                 _bookPro.Init(list, 0);
             }
-            else {
-                _bookPro.Init(list, 0);
+            else if (fromSceneEnum == FromSceneEnum.Photo)
+            {
+                _bookPro.Init(list, list.Count);
+            }
+            else if (fromSceneEnum == FromSceneEnum.Sign) {
+                Debug.Log("从签名页面打开！  -> " + list.Count);
+                _bookPro.Init(list, list.Count);
             }
 
             // 初始化滚动组件

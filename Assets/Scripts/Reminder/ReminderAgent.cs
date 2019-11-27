@@ -37,6 +37,7 @@ namespace BCity
                     var menuAgent = GameObject.Instantiate(_bcManager.screenProtectManager.menuAgentPrefab, _bcManager.screenProtectManager.opContainer);
                     //menuAgent.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
                     //menuAgent.GetComponent<Image>().DOFade(1f, 2f);
+                    _bcManager.menuAgent = menuAgent;
                 });
 
         }

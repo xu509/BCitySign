@@ -317,7 +317,6 @@ namespace BCity
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("OnBeginDrag");
             //OnMouseUp();
             //OnMouseMove(new Vector3(eventData.position.x, eventData.position.y, 0));
             _writeStatus = WriteStatus.Init;
@@ -325,7 +324,6 @@ namespace BCity
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            Debug.Log("OnEndDrag");
             //OnMouseMove(new Vector3(eventData.position.x, eventData.position.y, 0));
             OnMouseUp();
             //AddLetterDataEnd();
@@ -336,11 +334,11 @@ namespace BCity
 
         public void OnDrag(PointerEventData eventData)
         {
-            Debug.Log("OnDrag");
+            //Debug.Log("OnDrag");
             float x = eventData.position.x - rawMousePosition.x;
             float y = eventData.position.y - rawMousePosition.y;
 
-            Debug.Log("rawMousePosition : " + rawMousePosition);
+            //Debug.Log("rawMousePosition : " + rawMousePosition);
 
             //AddLetterData(x, y);
 
