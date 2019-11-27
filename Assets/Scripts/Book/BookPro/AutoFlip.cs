@@ -27,19 +27,17 @@ namespace BCity {
         }
         public void FlipRightPage()
         {
-            Debug.Log("Flip Right Page");
-
-            if (isPageFlipping) return;
+            if (isPageFlipping) {
+                Debug.Log("翻页中，未翻页成功");
+                return; 
+            }
             if (ControledBook.CurrentPaper >= ControledBook.papers.Count) {
-                Debug.Log("ControledBook.CurrentPaper : " + ControledBook.CurrentPaper);
-                Debug.Log("ControledBook.papers : " + ControledBook.papers.Count);
-
-                Debug.Log("ControledBook.CurrentPaper >= ControledBook.papers.Length");
+                Debug.Log("未进入翻页逻辑");
                 return;
             }
             isPageFlipping = true;
             PageFlipper.FlipPage(ControledBook, PageFlipTime, FlipMode.RightToLeft, ()=> { isPageFlipping = false; });
-            Debug.Log("Right :  PageFlipper.FlipPage");
+            Debug.Log("进行翻页");
 
 
         }

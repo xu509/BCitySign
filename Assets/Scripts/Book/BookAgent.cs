@@ -40,19 +40,15 @@ namespace BCity
 
 
         public void OnRecognizeDirection(ScrollDirectionEnum scrollDirectionEnum) {
-            Debug.Log("识别方向 ");
-
             if (scrollDirectionEnum == ScrollDirectionEnum.Left)
             {
                 _flipAgent.FlipRightPage();
-                Debug.Log("下一张！");
 
 
             }
             else if (scrollDirectionEnum == ScrollDirectionEnum.Right)
             {
                 _flipAgent.FlipLeftPage();
-                Debug.Log("上一张");
             }
         }
 

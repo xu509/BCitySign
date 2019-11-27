@@ -59,12 +59,17 @@ namespace BCity {
             {
                 if (value != currentPaper)
                 {
-                    if (value <StartFlippingPaper)
+                    if (value < StartFlippingPaper)
                         currentPaper = StartFlippingPaper;
-                    else if (value > EndFlippingPaper+1)
-                        currentPaper = EndFlippingPaper+1;
-                    else
+                    else if (value > EndFlippingPaper + 1)
+                        currentPaper = EndFlippingPaper + 1;
+                    else {
+                        Debug.Log("更新索引至 -》 " + value);
+
                         currentPaper = value;
+
+                    }
+                    
                     UpdatePages();
                 }
             }
@@ -334,13 +339,17 @@ namespace BCity {
         }
         public void DragRightPageToPoint(Vector3 point)
         {
-            if (currentPaper > EndFlippingPaper) return;
+            if (currentPaper > EndFlippingPaper) {
+                return;
+            }
+            
             pageDragging = true;
             mode = FlipMode.RightToLeft;
             f = point;
 
             ClippingPlane.rectTransform.pivot = new Vector2(1, 0.35f);
             currentPaper += 1;
+            Debug.Log("更新当前页码索引");
 
             UpdatePages();
 
@@ -422,9 +431,11 @@ namespace BCity {
         // Update is called once per frame
         void Update()
         {
+            //Debug.Log("currentPaper : " + currentPaper + " | pages size : " + papers.Count);
+
             if (pageDragging && interactable)
             {
-                UpdateBook();
+                UpdateBook();                
             }
         }
         public void UpdateBook()
@@ -570,6 +581,9 @@ namespace BCity {
                         papers.Add(paper);                    
                     }
 
+
+                    EndFlippingPaper = size;
+
                     if (hasOverSize)
                     {
 
@@ -595,6 +609,7 @@ namespace BCity {
                             pageLeft.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 1);
                             papers[i].Back = pageLeft.gameObject;
                             pageLeft.gameObject.name = "paper-" + (2 * i + 1);
+                            Debug.Log("Paper - " + i + " => back is => ##" + pageLeft.gameObject.name);
 
 
                             var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
@@ -602,6 +617,9 @@ namespace BCity {
                             pageRight.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 2);
                             papers[i + 1].Front = pageRight.gameObject;
                             pageRight.gameObject.name = "paper-" + (2 * i + 2);
+
+                            Debug.Log("Paper - " + (i+1) + " => Front is => ##" + pageRight.gameObject.name);
+
 
                         }
 
@@ -611,6 +629,8 @@ namespace BCity {
                         coverBack.gameObject.name = "paper-back";
 
                         papers[papers.Count - 1].Back = coverBack.gameObject;
+                        Debug.Log("Paper - " + (papers.Count - 1) + " back is 封底");
+
 
                     }
 
@@ -624,9 +644,14 @@ namespace BCity {
         ///     翻页至page
         /// </summary>
         /// <param name="page"></param>
-        private void TurnToPages(int page) { 
-        
+        private void TurnToPages(int page) {
 
+            Debug.Log("翻页至 ： " + page);
+
+            if (page != 0) {
+                currentPaper = page;
+                UpdatePages();
+            }           
         }
 
 
