@@ -47,7 +47,7 @@ namespace BCity {
         /// <summary>
         ///     打开相册
         /// </summary>
-        public void OpenAlbum(bool fromMenu) {
+        public void OpenAlbum(FromSceneEnum fromScene) {
             if (_showPhoto) {
                 _showPhoto = false;
                 _photoAgent = null;
@@ -70,7 +70,7 @@ namespace BCity {
                     Debug.Log("_albumAgent init");
 
                 }
-                _albumAgent.Open(true);
+                _albumAgent.Open(fromScene);
                 _showAlbum = true; ;
             }
         }
@@ -182,7 +182,7 @@ namespace BCity {
         public void DoCheckAlbum()
         {
             Debug.Log("点击查看相册");
-            OpenAlbum(true);
+            OpenAlbum(FromSceneEnum.Menu);
         }
 
         /// <summary>

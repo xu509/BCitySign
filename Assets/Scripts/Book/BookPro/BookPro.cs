@@ -5,17 +5,29 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public enum FlipMode1
-{
-    RightToLeft,
-    LeftToRight
-}
 
-namespace BCity { 
+namespace BCity {
+
+    public enum FlipMode1
+    {
+        RightToLeft,
+        LeftToRight
+    }
+
     public class BookPro : MonoBehaviour
     {
+        [SerializeField, Header("Prefab - Left")] BookPageAgent _bookPageAgentLeftPrefab;
+        [SerializeField, Header("Prefab - Right")] BookPageAgent _bookPageAgentRightPrefab;
+
+        [SerializeField] int _size;
+
+
+        private int _turnToPage;
+        List<PageRecord> _pageRecords;
+
+
         Canvas canvas;
-        [SerializeField]
+        [SerializeField,Header("In Plugin")]
         RectTransform BookPanel;
         public Image ClippingPlane;
         public Image Shadow;
@@ -31,7 +43,7 @@ namespace BCity {
         [HideInInspector]
         public int currentPaper = 0;
         [HideInInspector]
-        public Paper[] papers;
+        public List<Paper> papers;
         /// <summary>
         /// OnFlip invocation list, called when any page flipped
         /// </summary>
@@ -94,33 +106,35 @@ namespace BCity {
         /// </summary>
         bool tweening = false;
 
-        public void Init(List<PageRecord> pageRecords) {
+
+
+
+        public void Init(List<PageRecord> pageRecords,int pageNumber) {
+            _pageRecords = pageRecords;
+            _turnToPage = pageNumber;
 
             if (pageRecords == null)
             {
                 Debug.Log("当前书本插件未加载到数据");
-
             }
             else {
                 Debug.Log("当前书本插件加载到 ： " + pageRecords.Count + " 条数据");
+                InitComponents();
             }
-
-            
         }
 
 
-
-
-
         // Use this for initialization
-        void Start()
-        {
-            return;
+        private void InitComponents()
+        {            
             Canvas[] c = GetComponentsInParent<Canvas>();
             if (c.Length > 0)
                 canvas = c[c.Length - 1];
             else
                 Debug.LogError("Book Must be a child to canvas diectly or indirectly");
+
+
+            InitPages();
 
             UpdatePages();
 
@@ -148,6 +162,15 @@ namespace BCity {
 
             LeftPageShadow.rectTransform.sizeDelta = new Vector2(pageWidth, shadowPageHeight);
             LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
+
+            Debug.Log("currentPaper : " + currentPaper);
+            Debug.Log("papers length : " + papers.Count);
+
+
+            Debug.Log("加载组件完成");
+
+            TurnToPages(_turnToPage);
+
         }
 
         /// <summary>
@@ -204,7 +227,7 @@ namespace BCity {
             int previousPaper = pageDragging ? currentPaper - 2 : currentPaper - 1;
 
             //Hide all pages
-            for (int i = 0; i < papers.Length; i++)
+            for (int i = 0; i < papers.Count; i++)
             {
                 BookUtility.HidePage(papers[i].Front);
                 papers[i].Front.transform.SetParent(BookPanel.transform);
@@ -224,10 +247,10 @@ namespace BCity {
                 }
 
                 //Show the front page of all next papers
-                for (int i = papers.Length - 1; i >= currentPaper; i--)
+                for (int i = papers.Count - 1; i >= currentPaper; i--)
                 {
                     BookUtility.ShowPage(papers[i].Front);
-                    papers[i].Front.transform.SetSiblingIndex(papers.Length - i + previousPaper);
+                    papers[i].Front.transform.SetSiblingIndex(papers.Count - i + previousPaper);
                     BookUtility.CopyTransform(RightPageTransform.transform, papers[i].Front.transform);
                 }
 
@@ -243,10 +266,10 @@ namespace BCity {
                     BookUtility.CopyTransform(LeftPageTransform.transform, papers[previousPaper].Back.transform);
                 }
                 //show front of current page only
-                if (currentPaper <= papers.Length - 1)
+                if (currentPaper <= papers.Count - 1)
                 {
                     BookUtility.ShowPage(papers[currentPaper].Front);
-                    papers[currentPaper].Front.transform.SetSiblingIndex(papers.Length - currentPaper + previousPaper);
+                    papers[currentPaper].Front.transform.SetSiblingIndex(papers.Count - currentPaper + previousPaper);
                     BookUtility.CopyTransform(RightPageTransform.transform, papers[currentPaper].Front.transform);
 
                 }
@@ -270,7 +293,7 @@ namespace BCity {
                     LeftPageShadow.transform.SetParent(BookPanel, true);
                 }
 
-                if (currentPaper < papers.Length)
+                if (currentPaper < papers.Count)
                 {
                     //has at least one next page, the right shadow should be active
                     RightPageShadow.gameObject.SetActive(true);
@@ -496,6 +519,151 @@ namespace BCity {
             }
         }
 
+        /// <summary>
+        ///     初始化pages
+        /// </summary>
+        private void InitPages()
+        {
+            var recordsCount = _pageRecords.Count;
+
+            if (_turnToPage == 0) {
+
+                // 当没有内容时
+                if (recordsCount == 0)
+                {
+                    // 创建第一页
+                    var coverPaper = CreateCover();
+                    coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
+
+                    var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+                    pageLeft.Init(null, false, true);
+                    pageLeft.GetComponent<RectTransform>().SetSiblingIndex(1);
+
+                    AddPage(coverPaper.gameObject, pageLeft.gameObject);
+
+                    // 创建第二页
+                    var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
+                    pageRight.Init(null, false, true);
+                    pageRight.GetComponent<RectTransform>().SetSiblingIndex(2);
+
+                    var coverBackPage = CreateCoverBack();
+                    coverBackPage.GetComponent<RectTransform>().SetSiblingIndex(3);
+
+                    AddPage(pageRight.gameObject, coverBackPage.gameObject);
+                }
+                else if (recordsCount > 0) {
+                    
+                    int size;
+                    bool hasOverSize = false;
+
+                    if (recordsCount > _size)
+                    {
+                        size = _size;
+                        hasOverSize = true;
+                    }
+                    else {
+                        size = recordsCount;
+                    }
+
+                    for (int i = 0; i < size + 1; i++) {
+                        Paper paper = new Paper();
+                        papers.Add(paper);                    
+                    }
+
+                    if (hasOverSize)
+                    {
+
+                    }
+                    // 未超出容量
+                    else
+                    {
+                        Debug.Log("papers size : " + papers.Count);
+                        Debug.Log("_pageRecords size : " + _pageRecords.Count);
+
+                        // 创建第一页
+                        var coverPaper = CreateCover();
+                        coverPaper.GetComponent<RectTransform>().SetSiblingIndex(0);
+                        papers[0].Front = coverPaper;
+                        coverPaper.gameObject.name = "paper-cover";
+
+
+                        for (int i = 0; i < _pageRecords.Count; i++) {
+                            var data = _pageRecords[i];
+
+                            var pageLeft = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+                            pageLeft.Init(data, false, false);
+                            pageLeft.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 1);
+                            papers[i].Back = pageLeft.gameObject;
+                            pageLeft.gameObject.name = "paper-" + (2 * i + 1);
+
+
+                            var pageRight = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab, transform);
+                            pageRight.Init(data, false, false);
+                            pageRight.GetComponent<RectTransform>().SetSiblingIndex(2 * i + 2);
+                            papers[i + 1].Front = pageRight.gameObject;
+                            pageRight.gameObject.name = "paper-" + (2 * i + 2);
+
+                        }
+
+
+                        var coverBack = CreateCoverBack();
+                        coverBack.GetComponent<RectTransform>().SetSiblingIndex(papers.Count * 2 + 1);
+                        coverBack.gameObject.name = "paper-back";
+
+                        papers[papers.Count - 1].Back = coverBack.gameObject;
+
+                    }
+
+                }
+
+
+            }
+        }
+
+        /// <summary>
+        ///     翻页至page
+        /// </summary>
+        /// <param name="page"></param>
+        private void TurnToPages(int page) { 
+        
+
+        }
+
+
+        /// <summary>
+        ///     创建封面
+        /// </summary>
+        private GameObject CreateCover() {
+            var cover = Instantiate<BookPageAgent>(_bookPageAgentRightPrefab,transform);
+            cover.Init(null,true,false);
+            cover.GetComponent<RectTransform>().SetSiblingIndex(0);
+            
+            return cover.gameObject;
+        }
+
+        /// <summary>
+        ///     创建封底
+        /// </summary>
+        private GameObject CreateCoverBack()
+        {
+            var cover = Instantiate<BookPageAgent>(_bookPageAgentLeftPrefab, transform);
+            cover.Init(null, true, false);
+
+            //papers
+            return cover.gameObject;
+        }
+
+
+        private void AddPage(GameObject front,GameObject back) {
+            Paper paper = new Paper();
+            paper.Front = front;
+            paper.Back = back;
+            papers.Add(paper);
+        }
+
+
+
+
         #region Page Curl Internal Calculations
         //for more info about this part please check this link : http://rbarraza.com/html5-canvas-pageflip/
 
@@ -702,4 +870,5 @@ namespace BCity {
 
         }
     }
+    
 }

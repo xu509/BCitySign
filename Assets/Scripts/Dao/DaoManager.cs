@@ -112,6 +112,28 @@ namespace BCity
         }
 
 
+        public Sprite GetImageSprite(string path) {
+
+            Texture2D tex = null;
+            byte[] fileData;
+
+            if (File.Exists(_fileDir + path))
+            {
+                fileData = File.ReadAllBytes(_fileDir + path);
+                tex = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+                tex.filterMode = FilterMode.Bilinear;
+                tex.wrapMode = TextureWrapMode.Clamp;
+
+                bool t = tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+            }
+            else
+            {
+                string str = "File is not found : " + (_fileDir + path);
+            }
+
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+            return sprite;
+        }
 
 
 
