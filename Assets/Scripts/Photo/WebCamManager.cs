@@ -9,8 +9,10 @@ namespace BCity {
     public class WebCamManager : MonoBehaviour
     {
         [SerializeField,Header("显示画布")] RawImage photoRaw;
-        [SerializeField, Header("倒计时数字")] Text _timerText;
+        //[SerializeField, Header("倒计时数字")] Text _timerText;
         [SerializeField, Header("捕捉图片")] Image _capturePhotoImage;
+
+        [SerializeField,Header("use 1080p")] bool _use1080p;
 
         WebCamTexture camTexture;
         BCManager _bcManager;
@@ -19,6 +21,17 @@ namespace BCity {
         Action _onCountDownFinished;    // 倒计时结束回调
         Action _onCountDownStart;    // 倒计时结束回调
         Action _onInitError;    // 倒计时结束回调
+
+        
+        public Image time_number_1;
+        public Image time_number_2;
+        public Image time_number_3;
+
+        public Image camBlackOverView;
+
+        public Text takePhotoText;
+        public Button btnFinish;
+        public Button btnRetake;
 
 
         private int timer;
@@ -59,7 +72,14 @@ namespace BCity {
                 {
                     var deviceName = devices[0].name;
                     Debug.Log(devices[0].name);
-                    camTexture = new WebCamTexture(deviceName, 1920, 1080, 30);
+
+                    if(_use1080p){
+                        camTexture = new WebCamTexture(deviceName, 1920, 1080, 30);
+
+                    }else {
+                        camTexture = new WebCamTexture(deviceName, 1280, 720, 30);
+                    }
+
                     photoRaw.texture = camTexture;
 
                     if (!camTexture.isPlaying) {
@@ -68,7 +88,6 @@ namespace BCity {
 
                     // 开始倒数
                     timer = 3;
-                    _timerText.text = timer.ToString();
 
                     StartCountDown();
                 }
@@ -81,18 +100,34 @@ namespace BCity {
         }
 
         void StartCountDown() {
+            camBlackOverView.gameObject.SetActive(true);
             _onCountDownStart.Invoke();
             Invoke("setTimer", 1.0f);
             Invoke("setTimer", 2.0f);
             Invoke("setTimer", 3.0f);
+            Invoke("setTimer", 4.0f);
         }
 
         void setTimer()
         {
             Debug.Log("setTimer");
+            
+            //_timerText.text = timer.ToString();
+            time_number_1.gameObject.SetActive(false);
+            time_number_2.gameObject.SetActive(false);
+            time_number_3.gameObject.SetActive(false);
+            if (timer == 3) {
+                time_number_3.gameObject.SetActive(true);
+            }
+            else if(timer == 2) {
+                time_number_2.gameObject.SetActive(true);
+            }
+            else if(timer == 1) {
+                time_number_1.gameObject.SetActive(true);
+            }
+
             timer = timer - 1;
-            _timerText.text = timer.ToString();
-            if (timer == 0)
+            if (timer < 0)
             {
                 _onCountDownFinished.Invoke();
                 // 进行拍照
@@ -104,6 +139,12 @@ namespace BCity {
         /// 进行拍摄
         /// </summary>
         void StartPhoto() {
+
+
+            takePhotoText.gameObject.SetActive(false);
+            btnFinish.gameObject.SetActive(true);
+            btnRetake.gameObject.SetActive(true);
+            camBlackOverView.gameObject.SetActive(false);
 
             Texture2D t2d = new Texture2D(camTexture.width, camTexture.height, TextureFormat.ARGB32, true);
             //将WebCamTexture 的像素保存到texture2D中
@@ -126,8 +167,13 @@ namespace BCity {
 
         public void DoRePhoto() {
             // 开始倒数
+
+            takePhotoText.gameObject.SetActive(true);
+            btnFinish.gameObject.SetActive(false);
+            btnRetake.gameObject.SetActive(false);
+            camBlackOverView.gameObject.SetActive(false);
+
             timer = 3;
-            _timerText.text = timer.ToString();
             _capturePhotoImage.gameObject.SetActive(false);
 
             StartCountDown();

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<PageRecordDataBase xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <pageRecords>
-    <PageRecord>
-      <Cdate>2019-11-27T18:17:41.5814894+08:00</Cdate>
-      <SignAddress>2019-11-27-18-17-41/sign.png</SignAddress>
-    </PageRecord>
-  </pageRecords>
-</PageRecordDataBase>
