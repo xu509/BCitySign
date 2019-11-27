@@ -19,10 +19,10 @@ namespace BCity
             // 获取数据
             IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
             List<PageRecord> list = _daoManagerServ.GetList(0, (int)_daoManagerServ.GetListTotal());
-            PageRecord record = list[0];
-            Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
-            Debug.Log("record PhotoAddress " + record.PhotoAddress);
-            Debug.Log("record SignAddress " + record.SignAddress);
+            //PageRecord record = list[0];
+            //Debug.Log("record GetListTotal " + (int)_daoManagerServ.GetListTotal());
+            //Debug.Log("record PhotoAddress " + record.PhotoAddress);
+            //Debug.Log("record SignAddress " + record.SignAddress);
 
             // 初始化book组件
             _bookPro.Init(list);

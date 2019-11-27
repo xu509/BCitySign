@@ -83,8 +83,8 @@ namespace BCity
         [System.Serializable]
         public class PageRecordDataBase {
 
-            [XmlArray("records")]
-            public List<PageRecord> _pageRecords = new List<PageRecord>();
+            //[XmlArray("records")]
+            List<PageRecord> _pageRecords = new List<PageRecord>();
 
             public List<PageRecord> pageRecords { get { return _pageRecords; } }
 
