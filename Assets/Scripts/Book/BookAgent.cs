@@ -14,7 +14,7 @@ namespace BCity
 
         [SerializeField, Header("Scroll")] ScrollAreaAgent _scrollAreaAgent;
 
-        public void Init() {
+        public void Init(FromSceneEnum fromSceneEnum) {
 
             // 获取数据
             IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
@@ -25,7 +25,13 @@ namespace BCity
             //Debug.Log("record SignAddress " + record.SignAddress);
 
             // 初始化book组件
-            _bookPro.Init(list);
+            if (fromSceneEnum == FromSceneEnum.Menu)
+            {
+                _bookPro.Init(list, 0);
+            }
+            else {
+                _bookPro.Init(list, 0);
+            }
 
             // 初始化滚动组件
             _scrollAreaAgent.Init(OnRecognizeDirection);
@@ -34,18 +40,24 @@ namespace BCity
 
 
         public void OnRecognizeDirection(ScrollDirectionEnum scrollDirectionEnum) {
+            Debug.Log("识别方向 ");
+
             if (scrollDirectionEnum == ScrollDirectionEnum.Left)
             {
                 _flipAgent.FlipRightPage();
+                Debug.Log("下一张！");
+
+
             }
             else if (scrollDirectionEnum == ScrollDirectionEnum.Right)
             {
                 _flipAgent.FlipLeftPage();
-
+                Debug.Log("上一张");
             }
         }
 
         public void DoPreviousPage() {
+
             _flipAgent.FlipRightPage();
         }
 

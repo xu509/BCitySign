@@ -14,6 +14,8 @@ namespace BCity
         // - 父组件
         private MenuAgent _menuAgent;
 
+        private FromSceneEnum _fromSceneEnum;
+
         // - 子组件
         [SerializeField, Header("Book")] BookAgent _bookAgent;
 
@@ -21,15 +23,16 @@ namespace BCity
         /// <summary>
         ///     打开
         /// </summary>
-        public void Open(bool fromMenu)
+        public void Open(FromSceneEnum fromSceneEnum)
         {
             GetComponent<Image>().DOFade(1f, 2f);
+            _fromSceneEnum = fromSceneEnum;
         }
 
         public void Init(MenuAgent menuAgent) {
             _menuAgent = menuAgent;
 
-            _bookAgent.Init();
+            _bookAgent.Init(_fromSceneEnum);
 
         }
 

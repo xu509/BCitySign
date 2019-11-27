@@ -59,7 +59,7 @@ namespace BCity {
 
 
             gameObject.SetActive(false);
-            _menuAgent.OpenAlbum(false);
+            _menuAgent.OpenAlbum(FromSceneEnum.Menu);
         }
 
 
