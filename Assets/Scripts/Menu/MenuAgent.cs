@@ -278,7 +278,7 @@ namespace BCity {
         /// </summary>
         public void DoSign()
         {
-            _showMenu = true;
+            _showMenu = false;
 
             Debug.Log("点击签名");
             _menuContainer.gameObject.SetActive(false);
