@@ -56,6 +56,9 @@ namespace BCity {
         public void choseF2(){
 
             introImgF1.gameObject.SetActive(false);
+            introImgF2.gameObject.SetActive(true);
+            return;
+            introImgF1.gameObject.SetActive(false);
             introImgF1.transform.SetAsFirstSibling();
             introImgF1.DOFade(0, 0.5f).OnComplete(() => {
                 

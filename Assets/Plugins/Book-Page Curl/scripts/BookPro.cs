@@ -214,6 +214,7 @@ public class BookPro : MonoBehaviour
             //show back of previous page only
             if (previousPaper >= 0)
             {
+                Debug.Log("flip right");
                 BookUtility.ShowPage(papers[previousPaper].Back);
                 //papers[previousPaper].Back.transform.SetParent(BookPanel.transform);
                 //papers[previousPaper].Back.transform.SetSiblingIndex(previousPaper);
@@ -222,6 +223,7 @@ public class BookPro : MonoBehaviour
             //show front of current page only
             if (currentPaper <= papers.Length - 1)
             {
+                Debug.Log("flip end");
                 BookUtility.ShowPage(papers[currentPaper].Front);
                 papers[currentPaper].Front.transform.SetSiblingIndex(papers.Length - currentPaper + previousPaper);
                 BookUtility.CopyTransform(RightPageTransform.transform, papers[currentPaper].Front.transform);
