@@ -50,6 +50,10 @@ namespace BCity {
         /// </summary>
         public UnityEvent OnFlip;
 
+
+        public Button btnPrev;
+        public Button btnNext;
+
         /// <summary>
         /// The Current Shown paper (the paper its front shown in right part)
         /// </summary>
@@ -230,12 +234,33 @@ namespace BCity {
         
         }
 
+
+        void updateButton(){
+            var recordsCount = _pageRecords.Count;
+            if (currentPaper == 0)
+            {
+                btnPrev.interactable = false;
+            } else {
+                btnPrev.interactable = true;
+
+            }
+            if (currentPaper == _pageRecords.Count + 1)
+            {
+                btnNext.interactable = false;
+            }
+            else {
+                btnNext.interactable = true;
+
+            }
+
+        }
         /// <summary>
         /// Update page orders
         /// This function should be called whenever the current page changed, the dragging of the page started or the page has been flipped
         /// </summary>
         public void UpdatePages()
         {
+            updateButton();
             int previousPaper = pageDragging ? currentPaper - 2 : currentPaper - 1;
 
             //Hide all pages
