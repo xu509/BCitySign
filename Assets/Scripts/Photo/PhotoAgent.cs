@@ -38,7 +38,14 @@ namespace BCity
         public void Open() {
             GetComponent<Image>().DOFade(1, 2f)
                 .OnComplete(()=> {
-                    _webCamManager.Init(OnWebCameraPhoto, OnCountDownFinished, OnCountDownStart,OnInitError);
+                    try
+                    {
+                        _webCamManager.Init(OnWebCameraPhoto, OnCountDownFinished, OnCountDownStart, OnInitError);
+                    }
+                    catch (Exception ex) { 
+                    //ex.Message
+                        }
+                    
                 });
         }
 
