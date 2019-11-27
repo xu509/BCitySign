@@ -56,10 +56,12 @@ namespace BCity
 
 
         public void DoFinish() {
+            _webCamManager.StopCamera();
+
             // 保存图片
             var result = _bcManager.daoManager.SavePhotoTexture(_dateTime, _photo);
-            //更新数据
 
+            //更新数据
             string photoUrl = (string)result.GetData();
             _bcManager.daoManager.GetDaoService().SavePhotoInfomation(_dateTime, photoUrl);
 

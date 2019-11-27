@@ -61,7 +61,10 @@ namespace BCity {
                     Debug.Log(devices[0].name);
                     camTexture = new WebCamTexture(deviceName, 1920, 1080, 30);
                     photoRaw.texture = camTexture;
-                    camTexture.Play();
+
+                    if (!camTexture.isPlaying) {
+                        camTexture.Play();
+                    }                    
 
                     // 开始倒数
                     timer = 3;
@@ -128,6 +131,12 @@ namespace BCity {
             _capturePhotoImage.gameObject.SetActive(false);
 
             StartCountDown();
+        }
+
+        public void StopCamera() {
+            if (camTexture.isPlaying) {
+                camTexture.Stop();
+            }
         }
 
 
