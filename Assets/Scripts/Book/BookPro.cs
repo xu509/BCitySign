@@ -117,6 +117,8 @@ public class BookPro : MonoBehaviour
         Debug.Log("此处初始化数据");
         Debug.Log("数据数量： " + datas.Count);
 
+        return;
+
         GameObject page0 = GameObject.Find("Page0");
         GameObject page1 = GameObject.Find("Page1");
         GameObject page2 = GameObject.Find("Page2");
@@ -167,11 +169,16 @@ public class BookPro : MonoBehaviour
                 PageRecord record = datas[i-1];
                 signImg.texture = LoadImageByte(record.SignAddress);
 
+                RawImage photoImg = rightBook.photoImg;
                 PageRecord record2 = datas[i];
                 if (record2.PhotoAddress != null) {
                     Debug.Log("record2.PhotoAddress is "+record2.PhotoAddress);
-                    RawImage photoImg = rightBook.photoImg;
+                    
                     photoImg.texture = LoadImageByte(record2.PhotoAddress);
+                }
+                else
+                {
+                    photoImg.gameObject.SetActive(false);
                 }
                 
             }
@@ -349,6 +356,7 @@ public class BookPro : MonoBehaviour
             //show back of previous page only
             if (previousPaper >= 0)
             {
+                Debug.Log("flip right");
                 BookUtility.ShowPage(papers[previousPaper].Back);
                 //papers[previousPaper].Back.transform.SetParent(BookPanel.transform);
                 //papers[previousPaper].Back.transform.SetSiblingIndex(previousPaper);
@@ -357,6 +365,7 @@ public class BookPro : MonoBehaviour
             //show front of current page only
             if (currentPaper <= papers.Length - 1)
             {
+                Debug.Log("flip end");
                 BookUtility.ShowPage(papers[currentPaper].Front);
                 papers[currentPaper].Front.transform.SetSiblingIndex(papers.Length - currentPaper + previousPaper);
                 BookUtility.CopyTransform(RightPageTransform.transform, papers[currentPaper].Front.transform);
