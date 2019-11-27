@@ -15,7 +15,7 @@ namespace BCity
         [SerializeField, Header("Scroll")] ScrollAreaAgent _scrollAreaAgent;
         private BCManager _manager;
 
-        public void Init(FromSceneEnum fromSceneEnum,int page) {
+        public void Init(FromSceneEnum fromSceneEnum,int page,bool toLast) {
 
             Debug.Log("初始化bookagent ： " + fromSceneEnum);
             _manager = GameObject.Find("MainBrain").GetComponent<BCManager>();
@@ -24,11 +24,35 @@ namespace BCity
             // 获取数据
             IDaoService _daoManagerServ = GameObject.Find("Dao").GetComponent<DaoManager>().GetDaoService();
 
-            int size = _manager.albumSize;
-            int start = (page - 1) * size;
-            int total = (int)_daoManagerServ.GetListTotal();
+            List<PageRecord> list;
 
-            List<PageRecord> list = _daoManagerServ.GetList(start, size);
+            if (!toLast)
+            {
+                int size = _manager.albumSize;
+                int start = (page - 1) * size;
+                int total = (int)_daoManagerServ.GetListTotal();
+
+                list = _daoManagerServ.GetList(start, size);
+            }
+            else {
+
+                // 获取最后一个
+                var _recordsTotal = _daoManagerServ.GetListTotal();
+
+                int number = (int)_recordsTotal / _manager.albumSize;
+                if (_recordsTotal % _manager.albumSize > 0)
+                {
+                    number++;
+                }
+
+                int size = _manager.albumSize;
+                int start = (number - 1) * size;
+                int total = (int)_daoManagerServ.GetListTotal();
+
+                list = _daoManagerServ.GetList(start, size);
+            }
+
+
 
 
             //PageRecord record = list[0];
@@ -48,6 +72,10 @@ namespace BCity
             else if (fromSceneEnum == FromSceneEnum.Sign) {
                 Debug.Log("从签名页面打开！  -> " + list.Count);
                 _bookPro.Init(list, list.Count);
+            }
+            else if (fromSceneEnum == FromSceneEnum.AlbumSets)
+            {
+                _bookPro.Init(list, 0);
             }
 
             // 初始化滚动组件

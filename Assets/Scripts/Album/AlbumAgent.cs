@@ -15,6 +15,7 @@ namespace BCity
         private MenuAgent _menuAgent;
 
         private int _page; // 第几个
+        private bool _toLast;
         private FromSceneEnum _fromSceneEnum;
 
         // - 子组件
@@ -29,12 +30,13 @@ namespace BCity
             GetComponent<Image>().DOFade(1f, 2f);
             _fromSceneEnum = fromSceneEnum;
 
-            _bookAgent.Init(_fromSceneEnum, _page);
+            _bookAgent.Init(_fromSceneEnum, _page, _toLast);
 
         }
 
-        public void Init(MenuAgent menuAgent,int page) {
+        public void Init(MenuAgent menuAgent,int page,bool toLast) {
             _menuAgent = menuAgent;
+            _toLast = toLast;
             _page = page;
 
         }

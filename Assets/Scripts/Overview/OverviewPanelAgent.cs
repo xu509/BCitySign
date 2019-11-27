@@ -39,7 +39,7 @@ namespace BCity {
         }
 
         public void Close(Action onCloseCompleted) {
-            GetComponent<Image>().DOFade(0, 0.5f).OnComplete(() => {
+            GetComponent<Image>().DOFade(0, Time.deltaTime).OnComplete(() => {
                 Destroy(gameObject);
                 onCloseCompleted.Invoke();
             });

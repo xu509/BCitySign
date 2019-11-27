@@ -15,6 +15,10 @@ namespace BCity {
         [SerializeField,Header("Menu 容器")] RectTransform _menuContainer;
         [SerializeField,Header("相册集合")] AlbumSetsAgent _albumSetsAgentPrefab;
         [SerializeField] Transform _albumSetsAgentContainer;
+
+        [SerializeField, Header("相册")] AlbumAgent _albumAgentPrefab;
+        [SerializeField] Transform _albumAgentContainer;
+
         [SerializeField,Header("签字板")] SignAgent _signAgentPrefab;
         [SerializeField] Transform _signAgentContainer;
         [SerializeField, Header("拍照")] PhotoAgent _photoAgentPrefab;
@@ -24,11 +28,13 @@ namespace BCity {
 
         bool _showMenuTool = false;
         bool _showAlbum = false;
+        bool _showAlbumSet = false;
         bool _showSign = false;
         bool _showPhoto = false;
         bool _showOverview = false;
 
         AlbumSetsAgent _albumSetsAgent;
+        AlbumAgent _albumAgent;
         SignAgent _signAgent;
         PhotoAgent _photoAgent;
         OverviewPanelAgent _overviewAgent;
@@ -55,9 +61,9 @@ namespace BCity {
 
 
         /// <summary>
-        ///     打开相册
+        ///     打开相册集合
         /// </summary>
-        public void OpenAlbum(FromSceneEnum fromScene) {
+        public void OpenAlbumSets(FromSceneEnum fromScene) {
             if (_showPhoto) {
                 _showPhoto = false;
                 _photoAgent = null;
@@ -71,7 +77,7 @@ namespace BCity {
 
 
             _menuContainer.gameObject.SetActive(false);
-            if (!_showAlbum)
+            if (!_showAlbumSet)
             {
                 if (_albumSetsAgent == null)
                 {
@@ -81,9 +87,59 @@ namespace BCity {
 
                 }
                 _albumSetsAgent.Open();
+                _showAlbumSet = true; ;
+            }
+        }
+
+        /// <summary>
+        ///     打开相册
+        /// </summary>
+        public void OpenAlbum(int page,bool toLast)
+        {
+            if (_showPhoto)
+            {
+                _showPhoto = false;
+                _photoAgent = null;
+            }
+
+            if (_showSign)
+            {
+                _showSign = false;
+                _signAgent = null;
+            }
+
+            if (_showAlbumSet) {
+                _showAlbumSet = false;
+                _albumSetsAgent.gameObject.SetActive(false);
+                _albumSetsAgent = null;
+
+            }
+
+            _menuContainer.gameObject.SetActive(false);
+            if (!_showAlbum)
+            {
+                if (_albumAgent == null)
+                {
+                    _albumAgent = Instantiate(_albumAgentPrefab, _albumAgentContainer);
+                    _albumAgent.Init(this,page,toLast);
+                }
+
+                if (toLast)
+                {
+                    _albumAgent.Open(FromSceneEnum.Sign);
+
+                }
+                else {
+                    _albumAgent.Open(FromSceneEnum.AlbumSets);
+                }
+
                 _showAlbum = true; ;
             }
         }
+
+
+
+
 
         /// <summary>
         ///     打开拍摄界面
@@ -192,7 +248,7 @@ namespace BCity {
         public void DoCheckAlbum()
         {
             Debug.Log("点击查看相册");
-            OpenAlbum(FromSceneEnum.Menu);
+            OpenAlbumSets(FromSceneEnum.Menu);
         }
 
         /// <summary>

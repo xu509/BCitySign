@@ -66,7 +66,9 @@ namespace BCity
             _bcManager.daoManager.GetDaoService().SavePhotoInfomation(_dateTime, photoUrl);
 
             Close();
-            _menuAgent.OpenAlbum(FromSceneEnum.Photo);
+            _menuAgent.OpenAlbum(0, true);
+
+            //_menuAgent.OpenAlbumSets(FromSceneEnum.Photo);
         }
 
         public void DoRephoto()
