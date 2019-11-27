@@ -32,6 +32,7 @@ namespace BCity {
         bool _showSign = false;
         bool _showPhoto = false;
         bool _showOverview = false;
+        bool _showMenu = false;
 
         AlbumSetsAgent _albumSetsAgent;
         AlbumAgent _albumAgent;
@@ -47,6 +48,7 @@ namespace BCity {
 
         public void FadeInMenu(){
             Debug.Log("FadeInMenu");
+            _showMenu = true;
             menuPane.alpha = 0;
             menuPane.GetComponent<CanvasGroup>().DOFade(1, 0.5f);
         }
@@ -58,6 +60,9 @@ namespace BCity {
             _showSign = false;
             _showAlbumSet = false;
             _menuContainer.gameObject.SetActive(true);
+
+            _showMenu = true;
+
         }
 
 
@@ -65,6 +70,8 @@ namespace BCity {
         ///     打开相册集合
         /// </summary>
         public void OpenAlbumSets(FromSceneEnum fromScene) {
+            _showMenu = false;
+
             if (_showPhoto) {
                 _showPhoto = false;
                 _photoAgent = null;
@@ -97,6 +104,8 @@ namespace BCity {
         /// </summary>
         public void OpenAlbum(int page,bool toLast)
         {
+            _showMenu = false;
+
             if (_showPhoto)
             {
                 _showPhoto = false;
@@ -146,6 +155,8 @@ namespace BCity {
         ///     打开拍摄界面
         /// </summary>
         public void OpenPhoto(DateTime dateTime) {
+            _showMenu = false;
+
             if (!_showPhoto) {
                 if (_photoAgent == null)
                 {
@@ -165,6 +176,8 @@ namespace BCity {
         /// </summary>
         public void OpenOverview()
         {
+            _showMenu = false;
+
             Debug.Log("打开概览");
 
             if (!_showOverview)
@@ -210,6 +223,9 @@ namespace BCity {
             _showSign = false;
             _showPhoto = false;
             _showOverview = false;
+            _showAlbumSet = false;
+
+            _showMenu = true;
 
 
             _menuContainer.GetComponent<CanvasGroup>()
@@ -226,6 +242,7 @@ namespace BCity {
         /// </summary>
         public void DoSign()
         {
+            _showMenu = true;
             Debug.Log("点击签名");
             _menuContainer.gameObject.SetActive(false);
 
