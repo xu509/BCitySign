@@ -42,9 +42,23 @@ namespace BCity {
 
         [SerializeField] CanvasGroup menuPane;
 
+        float _recentTime;
+
+
         void Start() {
             FadeInMenu();
         }
+
+        void Update() { 
+            
+
+        
+        
+        
+        }
+
+
+
 
         public void FadeInMenu(){
             Debug.Log("FadeInMenu");
@@ -243,6 +257,7 @@ namespace BCity {
         public void DoSign()
         {
             _showMenu = true;
+
             Debug.Log("点击签名");
             _menuContainer.gameObject.SetActive(false);
 

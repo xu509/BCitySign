@@ -63,9 +63,9 @@ namespace BCity {
                         // 设置照片
                         if (_pageRecord.PhotoAddress == null)
                         {
-                            Debug.Log("111111");
+                            _defaultContainer.gameObject.SetActive(true);
+                            _normalContainer.gameObject.SetActive(false);
 
-                            _photoImage.sprite = _emptyImage;
                         }
                         else {
                             _photoImage.sprite = _manager.daoManager.GetImageSprite(_pageRecord.PhotoAddress);
