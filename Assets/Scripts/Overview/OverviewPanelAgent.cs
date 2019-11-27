@@ -46,7 +46,7 @@ namespace BCity {
         }
 
         public void choseF1(){
-            //introImgF1.
+
             introImgF1.gameObject.SetActive(true);
             introImgF2.gameObject.SetActive(false);
             return;
