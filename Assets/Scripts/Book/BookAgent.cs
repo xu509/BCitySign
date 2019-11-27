@@ -54,11 +54,11 @@ namespace BCity
 
         public void DoPreviousPage() {
 
-            _flipAgent.FlipRightPage();
+            _flipAgent.FlipLeftPage();
         }
 
         public void DoNextPage() {
-            _flipAgent.FlipLeftPage();
+            _flipAgent.FlipRightPage();
         }
 
     }

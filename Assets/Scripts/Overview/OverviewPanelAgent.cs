@@ -47,25 +47,35 @@ namespace BCity {
 
         public void choseF1(){
             //introImgF1.
-            introImgF2.gameObject.SetActive(false);
+            /*introImgF2.gameObject.SetActive(false);
             introImgF1.gameObject.SetActive(true);
-            return;
-            introImgF2.transform.SetAsFirstSibling();
-            introImgF2.DOFade(0, 0.5f).OnComplete(() => {
-                
-            });
+            return;*/
+
+            introImgF1.GetComponent<CanvasGroup>().alpha = 0;
+            introImgF1.gameObject.SetActive(true);
+            introImgF2.gameObject.SetActive(false);
+            introImgF1.GetComponent<CanvasGroup>().DOFade(1, 1f);
         }
 
         public void choseF2(){
 
-            introImgF1.gameObject.SetActive(false);
+            /*introImgF1.gameObject.SetActive(false);
             introImgF2.gameObject.SetActive(true);
-            return;
+            return;*/
+
+            introImgF2.GetComponent<CanvasGroup>().alpha = 0;
+            introImgF2.gameObject.SetActive(true);
             introImgF1.gameObject.SetActive(false);
+            introImgF2.GetComponent<CanvasGroup>().DOFade(1, 1f);
+            /*
+            introImgF1.GetComponent<CanvasGroup>().alpha = 1;
+            introImgF2.GetComponent<CanvasGroup>().alpha = 1;
             introImgF1.transform.SetAsFirstSibling();
-            introImgF1.DOFade(0, 0.5f).OnComplete(() => {
-                
-            });
+            introImgF1.GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => {
+                introImgF2.transform.SetAsFirstSibling();
+                introImgF1.GetComponent<CanvasGroup>().alpha = 1;
+
+            });*/
         }
 
         public void DoReturn() {
