@@ -42,32 +42,54 @@ namespace BCity {
 
         [SerializeField] CanvasGroup menuPane;
 
-        float _recentTime;
+        float _recentActiveTime;
+
+        private BCManager _manager;
 
 
         void Start() {
+            UpdateRecentActiveTime();
             FadeInMenu();
         }
 
-        void Update() { 
-            
+        void Update() {
+            if (_showMenu && (Time.time - _recentActiveTime) > _manager.activeTime) {
+                CloseMenu();
+            }                       
+        }
 
-        
-        
-        
+        public void Init() {
+            _manager = GameObject.Find("MainBrain").GetComponent<BCManager>();
+        }
+
+
+
+        private void CloseMenu() {
+            GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() =>
+            {
+                Destroy(gameObject);
+
+                _manager.reminderAgent.Recover();
+            });
+        }
+
+
+
+        private void UpdateRecentActiveTime() {
+            _recentActiveTime = Time.time;
         }
 
 
 
 
         public void FadeInMenu(){
-            Debug.Log("FadeInMenu");
             _showMenu = true;
             menuPane.alpha = 0;
             menuPane.GetComponent<CanvasGroup>().DOFade(1, 0.5f);
         }
 
         public void Recover() {
+            UpdateRecentActiveTime();
             _albumSetsAgent = null;
             _signAgent = null;
             _showAlbum = false;
